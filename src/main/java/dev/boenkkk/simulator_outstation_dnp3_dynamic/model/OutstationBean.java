@@ -24,6 +24,6 @@ public class OutstationBean {
 
         private final OutstationServer outstationServer;
         private final Outstation outstation;
-        private List<CircuitBreakerModel> circuitBreakerModel;
+        private List<Object> listDataPoints;
     }
 }
