@@ -1,0 +1,21 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# Top-most EditorConfig file
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.java]
+# Java specific settings
+ij_java_space_after_type_cast = true
+# Never use wildcard imports
+ij_java_class_count_to_use_import_on_demand = 999
+ij_java_names_count_to_use_import_on_demand = 999
+# Imports Order
+ij_java_imports_layout = $*, |, dev.**, |, java.**, |, javax.**, |, org.**, |, io.**, |, com.**, | #
