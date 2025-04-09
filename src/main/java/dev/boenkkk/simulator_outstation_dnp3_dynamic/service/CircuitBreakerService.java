@@ -32,20 +32,24 @@ public class CircuitBreakerService {
         databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandInvalid()); // command invalid
         databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandLocalRemote()); // command local/remote
 
+        // Store model in outstation data
         outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
-            List<CircuitBreakerModel> circuitBreakerModels = Optional
-                .ofNullable(outstationData.getCircuitBreakerModel()).orElseGet(ArrayList::new);
-            circuitBreakerModels.add(circuitBreakerModel);
+            List<Object> dataPoints = Optional
+                .ofNullable(outstationData.getListDataPoints())
+                .orElseGet(ArrayList::new);
+            dataPoints.add(circuitBreakerModel);
 
-            outstationData.setCircuitBreakerModel(circuitBreakerModels);
+            outstationData.setListDataPoints(dataPoints);
         });
     }
 
     public CircuitBreakerModel getData(String name) {
         return outstationsService.getOutstationData(ENDPOINT)
-            .map(OutstationBean.OutstationData::getCircuitBreakerModel)
+            .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
+            .filter(CircuitBreakerModel.class::isInstance)
+            .map(CircuitBreakerModel.class::cast)
             .filter(model -> name.equals(model.getName()))
             .findFirst()
             .orElse(null);
@@ -53,31 +57,36 @@ public class CircuitBreakerService {
 
     public List<CircuitBreakerModel> getAll() {
         return outstationsService.getOutstationData(ENDPOINT)
-            .map(OutstationBean.OutstationData::getCircuitBreakerModel)
+            .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
+            .filter(CircuitBreakerModel.class::isInstance)
+            .map(CircuitBreakerModel.class::cast)
             .toList();
     }
 
     public void deleteData(CircuitBreakerModel circuitBreakerModel) {
         outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
-            List<CircuitBreakerModel> circuitBreakerModels = outstationData.getCircuitBreakerModel();
+            List<Object> dataPoints = outstationData.getListDataPoints();
 
-            if (circuitBreakerModels != null) {
-                // Find the model that matches by name
-                Optional<CircuitBreakerModel> matchedModelOpt = circuitBreakerModels.stream()
+            if (dataPoints != null) {
+                // Find the matching CircuitBreakerModel in the actual list
+                Optional<CircuitBreakerModel> matchedModelOpt = dataPoints.stream()
+                    .filter(CircuitBreakerModel.class::isInstance)
+                    .map(CircuitBreakerModel.class::cast)
                     .filter(model -> circuitBreakerModel.getName().equals(model.getName()))
                     .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
-                    // remove bean
-                    circuitBreakerModels.remove(matchedModel);
+                    // Remove from original list (important!)
+                    dataPoints.remove(matchedModel);
+                    log.info("Removed model: {}", matchedModel);
 
-                    // remove dnp3 database
-                    databaseService.deleteDoubleBitBinaryInput(ENDPOINT, matchedModel.getIndexValue()); // cb value
-                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandOpenClose()); // command open/close
-                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandInvalid()); // command invalid
-                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandLocalRemote()); // command local/remote
+                    // Remove from DNP3 database
+                    databaseService.deleteDoubleBitBinaryInput(ENDPOINT, matchedModel.getIndexValue());
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandOpenClose());
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandInvalid());
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandLocalRemote());
                 });
             }
         });

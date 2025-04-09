@@ -125,7 +125,7 @@ public class ServerService {
             OutstationData.builder()
                 .outstationServer(server)
                 .outstation(outstation)
-                .circuitBreakerModel(null)
+                .listDataPoints(null)
                 .build()
         );
         outstationsService.registerBean(outstationBean);
