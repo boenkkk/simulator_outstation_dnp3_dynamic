@@ -80,6 +80,10 @@ public class DatabaseService {
     public void deleteBinaryInput(String endpoint, Integer index) {
         outstationsService.getOutstationData(endpoint)
             .ifPresent(outstationData -> outstationData.getOutstation().transaction(db -> {
+                Flags flags = new Flags(Flag.COMM_LOST);
+
+                BinaryInput binaryInput = new BinaryInput(UShort.valueOf(index), false, flags, timeUtil.now());
+                db.updateBinaryInput(binaryInput, UpdateOptions.detectEvent());
                 db.removeBinaryInput(UShort.valueOf(index));
             }));
     }
@@ -122,6 +126,11 @@ public class DatabaseService {
     public void deleteBinaryOutput(String endpoint, Integer index) {
         outstationsService.getOutstationData(endpoint)
             .ifPresent(outstationData -> outstationData.getOutstation().transaction(db -> {
+                Flags flags = new Flags(Flag.COMM_LOST);
+
+                BinaryOutputStatus binaryOutputStatus = new BinaryOutputStatus(UShort.valueOf(index), false, flags,
+                    timeUtil.now());
+                db.updateBinaryOutputStatus(binaryOutputStatus, UpdateOptions.detectEvent());
                 db.removeBinaryOutputStatus(UShort.valueOf(index));
             }));
     }
@@ -162,6 +171,10 @@ public class DatabaseService {
     public void deleteAnalogInput(String endpoint, Integer index) {
         outstationsService.getOutstationData(endpoint)
             .ifPresent(outstationData -> outstationData.getOutstation().transaction(db -> {
+                Flags flags = new Flags(Flag.COMM_LOST);
+
+                AnalogInput analogInput = new AnalogInput(UShort.valueOf(index), 0, flags, timeUtil.now());
+                db.updateAnalogInput(analogInput, UpdateOptions.detectEvent());
                 db.removeAnalogInput(UShort.valueOf(index));
             }));
     }
@@ -204,6 +217,11 @@ public class DatabaseService {
     public void deleteDoubleBitBinaryInput(String endpoint, Integer index) {
         outstationsService.getOutstationData(endpoint)
             .ifPresent(outstationData -> outstationData.getOutstation().transaction(db -> {
+                Flags flags = new Flags(Flag.COMM_LOST);
+
+                DoubleBitBinaryInput doubleBitBinaryInput = new DoubleBitBinaryInput(UShort.valueOf(index), DoubleBit.DETERMINED_OFF,
+                    flags, timeUtil.now());
+                db.updateDoubleBitBinaryInput(doubleBitBinaryInput, UpdateOptions.detectEvent());
                 db.removeDoubleBitBinaryInput(UShort.valueOf(index));
             }));
     }
