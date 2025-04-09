@@ -101,6 +101,13 @@ public class DatabaseService {
             }));
     }
 
+    public Boolean getBinaryOutput(String endpoint, Integer index) {
+        AtomicReference<Boolean> returnValue = new AtomicReference<>(false);
+        outstationsService.getOutstationData(endpoint).ifPresent(outstationData -> outstationData.getOutstation()
+            .transaction(db -> returnValue.set(db.getBinaryOutputStatus(UShort.valueOf(index)).value)));
+        return returnValue.get();
+    }
+
     public void updateValueBinaryOutput(String endpoint, Integer index, Boolean value) {
         outstationsService.getOutstationData(endpoint)
             .ifPresent(outstationData -> outstationData.getOutstation().transaction(db -> {
