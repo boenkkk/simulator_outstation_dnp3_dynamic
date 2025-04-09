@@ -27,9 +27,10 @@ public class CircuitBreakerService {
     }
 
     public void addData(CircuitBreakerModel circuitBreakerModel) {
-        databaseService.addDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndex()); // cb value
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndex()); // cb command
-        databaseService.addBinaryInput(ENDPOINT, circuitBreakerModel.getIndex()); // cb local remote
+        databaseService.addDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexValue()); // cb value
+        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandOpenClose()); // command open/close
+        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandInvalid()); // command invalid
+        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandLocalRemote()); // command local/remote
 
         outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
             List<CircuitBreakerModel> circuitBreakerModels = Optional
@@ -40,15 +41,13 @@ public class CircuitBreakerService {
         });
     }
 
-    public CircuitBreakerModel getData(Integer index) {
+    public CircuitBreakerModel getData(String name) {
         return outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getCircuitBreakerModel)
             .orElse(Collections.emptyList())
             .stream()
-            .filter(model -> index.equals(model.getIndex()))
+            .filter(model -> name.equals(model.getName()))
             .findFirst()
-            // .orElseThrow(() -> new NotFoundException("Circuit breaker data not found for
-            // name: " + name))
             .orElse(null);
     }
 
@@ -60,17 +59,26 @@ public class CircuitBreakerService {
             .toList();
     }
 
-    public void deleteData(Integer index) {
+    public void deleteData(CircuitBreakerModel circuitBreakerModel) {
         outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
             List<CircuitBreakerModel> circuitBreakerModels = outstationData.getCircuitBreakerModel();
 
             if (circuitBreakerModels != null) {
-                // Remove all models matching the name (assuming CircuitBreakerModel has
-                circuitBreakerModels.removeIf(model -> index.equals(model.getIndex()));
+                // Find the model that matches by name
+                Optional<CircuitBreakerModel> matchedModelOpt = circuitBreakerModels.stream()
+                    .filter(model -> circuitBreakerModel.getName().equals(model.getName()))
+                    .findFirst();
 
-                databaseService.deleteDoubleBitBinaryInput(ENDPOINT, index); // cb value
-                databaseService.deleteBinaryOutput(ENDPOINT, index); // cb command
-                databaseService.deleteBinaryInput(ENDPOINT, index); // cb local remote
+                matchedModelOpt.ifPresent(matchedModel -> {
+                    // remove bean
+                    circuitBreakerModels.remove(matchedModel);
+
+                    // remove dnp3 database
+                    databaseService.deleteDoubleBitBinaryInput(ENDPOINT, matchedModel.getIndexValue()); // cb value
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandOpenClose()); // command open/close
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandInvalid()); // command invalid
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandLocalRemote()); // command local/remote
+                });
             }
         });
     }

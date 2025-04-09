@@ -27,22 +27,22 @@ public class CircuitBreakerController {
         this.circuitBreakerService = circuitBreakerService;
     }
 
-    @GetMapping("get-all")
+    @GetMapping("/get-all")
     public ResponseEntity<List<CircuitBreakerModel>> getAll() {
         List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
 
         return ResponseEntity.ok(datas);
     }
 
-    @GetMapping("get-data/{index}")
-    public ResponseEntity<CircuitBreakerModel> getData(@PathVariable Integer index) {
-        log.info("req: {}", index);
-        CircuitBreakerModel data = circuitBreakerService.getData(index);
+    @GetMapping("/get-data/{name}")
+    public ResponseEntity<CircuitBreakerModel> getData(@PathVariable String name) {
+        log.info("req: {}", name);
+        CircuitBreakerModel data = circuitBreakerService.getData(name);
 
         return ResponseEntity.ok(data);
     }
 
-    @PostMapping("add-data")
+    @PostMapping("/add-data")
     public ResponseEntity<String> addData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
         log.info("req: {}", circuitBreakerModel);
         circuitBreakerService.addData(circuitBreakerModel);
@@ -50,10 +50,10 @@ public class CircuitBreakerController {
         return ResponseEntity.ok("add-data");
     }
 
-    @DeleteMapping("delete-data/{index}")
-    public ResponseEntity<String> deleteData(@PathVariable Integer index) {
-        log.info("req: {}", index);
-        circuitBreakerService.deleteData(index);
+    @DeleteMapping("/delete-data")
+    public ResponseEntity<String> deleteData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
+        log.info("req: {}", circuitBreakerModel);
+        circuitBreakerService.deleteData(circuitBreakerModel);
 
         return ResponseEntity.ok("delete-data");
     }
