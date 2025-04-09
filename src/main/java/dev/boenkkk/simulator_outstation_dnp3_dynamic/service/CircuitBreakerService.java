@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CircuitBreakerService {
 
     private static final String ENDPOINT = "0.0.0.0";
+    private static final String PREFIX_NAME = "CB_";
 
     private final DatabaseService databaseService;
     private final OutstationsService outstationsService;
@@ -37,6 +38,8 @@ public class CircuitBreakerService {
             List<Object> dataPoints = Optional
                 .ofNullable(outstationData.getListDataPoints())
                 .orElseGet(ArrayList::new);
+            String cbNewName = PREFIX_NAME + circuitBreakerModel.getName();
+            circuitBreakerModel.setName(cbNewName);
             dataPoints.add(circuitBreakerModel);
 
             outstationData.setListDataPoints(dataPoints);
@@ -74,7 +77,7 @@ public class CircuitBreakerService {
                 Optional<CircuitBreakerModel> matchedModelOpt = dataPoints.stream()
                     .filter(CircuitBreakerModel.class::isInstance)
                     .map(CircuitBreakerModel.class::cast)
-                    .filter(model -> circuitBreakerModel.getName().equals(model.getName()))
+                    .filter(model -> model.getName().equals(PREFIX_NAME + circuitBreakerModel.getName()))
                     .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
