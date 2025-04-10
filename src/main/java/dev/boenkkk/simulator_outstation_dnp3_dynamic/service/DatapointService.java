@@ -88,6 +88,12 @@ public class DatapointService {
 
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }
+                                        case "indexBoCommandLocalRemote" -> {
+                                            log.info("Action: LOCAL/REMOTE command for CB_");
+                                            databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            
+                                            commandStatus.set(CommandStatus.SUCCESS);
+                                        }
                                         default -> {
                                             log.warn("Unhandled key for CB_: {}", key);
                                             commandStatus.set(CommandStatus.UNKNOWN);
