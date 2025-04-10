@@ -6,8 +6,8 @@ import lombok.Data;
 public class CircuitBreakerModel {
 
     private String name;
-    private Integer indexValue;
-    private Integer indexCommandOpenClose;
-    private Integer indexCommandInvalid;
-    private Integer indexCommandLocalRemote;
+    private Integer indexDbbiValue;
+    private Integer indexBoCommandOpenClose;
+    private Integer indexBoCommandInvalid;
+    private Integer indexBoCommandLocalRemote;
 }

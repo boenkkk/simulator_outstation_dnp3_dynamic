@@ -28,10 +28,10 @@ public class CircuitBreakerService {
     }
 
     public void addData(CircuitBreakerModel circuitBreakerModel) {
-        databaseService.addDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexValue()); // cb value
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandOpenClose()); // command open/close
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandInvalid()); // command invalid
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexCommandLocalRemote()); // command local/remote
+        databaseService.addDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue()); // cb value
+        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandOpenClose()); // command open/close
+        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandInvalid()); // command invalid
+        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote()); // command local/remote
 
         // Store model in outstation data
         outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
@@ -86,10 +86,10 @@ public class CircuitBreakerService {
                     log.info("Removed model: {}", matchedModel);
 
                     // Remove from DNP3 database
-                    databaseService.deleteDoubleBitBinaryInput(ENDPOINT, matchedModel.getIndexValue());
-                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandOpenClose());
-                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandInvalid());
-                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexCommandLocalRemote());
+                    databaseService.deleteDoubleBitBinaryInput(ENDPOINT, matchedModel.getIndexDbbiValue());
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandOpenClose());
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandInvalid());
+                    databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandLocalRemote());
                 });
             }
         });
