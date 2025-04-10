@@ -44,10 +44,12 @@ public class ServerService {
     private final JsonUtil jsonUtil;
     private final TimeUtil timeUtil;
     private final HttpUtil httpUtil;
+    private final DatapointService datapointService;
 
     public ServerService(
         RuntimeChannel runtimeChannel, Dnp3Properties dnp3Properties, OutstationsService outstationsService,
-        DatabaseConfigImpl databaseConfigImpl, JsonUtil jsonUtil, TimeUtil timeUtil, HttpUtil httpUtil
+        DatabaseConfigImpl databaseConfigImpl, JsonUtil jsonUtil, TimeUtil timeUtil, HttpUtil httpUtil,
+        DatapointService datapointService
     ) {
         this.runtimeChannel = runtimeChannel;
         this.dnp3Properties = dnp3Properties;
@@ -56,6 +58,7 @@ public class ServerService {
         this.jsonUtil = jsonUtil;
         this.timeUtil = timeUtil;
         this.httpUtil = httpUtil;
+        this.datapointService = datapointService;
     }
 
     public void addServer(Dnp3ServerOutstationModel dnp3ServerOutstation) {
@@ -100,7 +103,7 @@ public class ServerService {
             outstationConfig,
             new OutstationApplicationImpl(jsonUtil),
             new OutstationInformationImpl(),
-            new ControlHandlerImpl(timeUtil),
+            new ControlHandlerImpl(timeUtil, datapointService),
             new ConnectionStateListenerImpl(dnp3Properties, httpUtil),
             AddressFilter.any()
         );

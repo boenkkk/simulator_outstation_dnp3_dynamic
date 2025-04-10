@@ -2,6 +2,7 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service.callback;
 
 import static org.joou.Unsigned.ushort;
 
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.service.DatapointService;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.util.TimeUtil;
 
 import org.joou.UShort;
@@ -14,6 +15,7 @@ import io.stepfunc.dnp3.DatabaseHandle;
 import io.stepfunc.dnp3.Flag;
 import io.stepfunc.dnp3.Flags;
 import io.stepfunc.dnp3.Group12Var1;
+import io.stepfunc.dnp3.OpType;
 import io.stepfunc.dnp3.OperateType;
 import io.stepfunc.dnp3.UpdateOptions;
 
@@ -25,9 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 public class ControlHandlerImpl implements ControlHandler {
 
     private final TimeUtil timeUtil;
+    private final DatapointService datapointService;
 
-    public ControlHandlerImpl(TimeUtil timeUtil) {
+    public ControlHandlerImpl(TimeUtil timeUtil, DatapointService datapointService) {
         this.timeUtil = timeUtil;
+        this.datapointService = datapointService;
     }
 
     @Override
@@ -51,11 +55,15 @@ public class ControlHandlerImpl implements ControlHandler {
     }
 
     @Override
-    public CommandStatus operateG12v1(Group12Var1 group12Var1, UShort index, OperateType opType, DatabaseHandle databaseHandle) {
-        String message = "operateG12v1 group12Var1:" + group12Var1 + ", index:" + index + ", opType:" + opType + ", databaseHandle:" + databaseHandle;
+    public CommandStatus operateG12v1(Group12Var1 control, UShort index, OperateType opType, DatabaseHandle database) {
+        String message = "operateG12v1 group12Var1:" + control + ", index:" + index + ", opType:" + opType + ", databaseHandle:" + database;
         log.info(message);
 
-        return null;
+        if (control.code.opType == OpType.LATCH_ON || control.code.opType == OpType.LATCH_OFF) {
+            return datapointService.operateBinaryOutput(control, index, opType, database);
+        } else {
+            return CommandStatus.NOT_SUPPORTED;
+        }
     }
 
     @Override
