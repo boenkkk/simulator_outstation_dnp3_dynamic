@@ -62,17 +62,22 @@ public class DatapointService {
                                     switch (key) {
                                         case "indexBoCommandOpenClose" -> {
                                             log.info("Action: OPEN/CLOSE command for CB_");
-                                            databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            boolean localRemoteValue = databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote());
+                                            if (localRemoteValue) {
+                                                databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
 
-                                            DoubleBit doubleBitValue;
-                                            if (valueOpType) {
-                                                doubleBitValue = DoubleBit.DETERMINED_ON;
+                                                DoubleBit doubleBitValue;
+                                                if (valueOpType) {
+                                                    doubleBitValue = DoubleBit.DETERMINED_ON;
+                                                } else {
+                                                    doubleBitValue = DoubleBit.DETERMINED_OFF;
+                                                }
+                                                databaseService.updateValueDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue(), doubleBitValue);
+
+                                                commandStatus.set(CommandStatus.SUCCESS);
                                             } else {
-                                                doubleBitValue = DoubleBit.DETERMINED_OFF;
+                                                commandStatus.set(CommandStatus.LOCAL);
                                             }
-                                            databaseService.updateValueDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue(), doubleBitValue);
-
-                                            commandStatus.set(CommandStatus.SUCCESS);
                                         }
                                         case "indexBoCommandInvalid" -> {
                                             log.info("Action: INVALID command for CB_");
@@ -91,7 +96,7 @@ public class DatapointService {
                                         case "indexBoCommandLocalRemote" -> {
                                             log.info("Action: LOCAL/REMOTE command for CB_");
                                             databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
-                                            
+
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }
                                         default -> {
