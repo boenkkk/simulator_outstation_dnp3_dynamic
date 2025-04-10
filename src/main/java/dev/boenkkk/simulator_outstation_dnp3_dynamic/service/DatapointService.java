@@ -99,7 +99,18 @@ public class DatapointService {
                                     switch (key) {
                                         case "indexBoCommandRaiseLower" -> {
                                             log.info("Action: RAISE/LOWER command for TC_");
-                                            // your logic here
+                                            databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            Double analogInput = databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue());
+                                            double updateValue;
+                                            if (valueOpType) {
+                                                updateValue = analogInput + 1.0;
+                                                updateValue = updateValue >= 32 ? 32 : updateValue;
+                                                databaseService.updateValueAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue(), updateValue);
+                                            } else {
+                                                updateValue = analogInput - 1.0;
+                                                updateValue = updateValue <= 0 ? 0 : updateValue;
+                                                databaseService.updateValueAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue(), updateValue);
+                                            }
 
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }
