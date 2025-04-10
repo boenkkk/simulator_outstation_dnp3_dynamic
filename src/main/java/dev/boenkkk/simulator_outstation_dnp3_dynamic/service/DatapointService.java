@@ -123,9 +123,18 @@ public class DatapointService {
                                     MeasurementModel measurementModel = (MeasurementModel) obj;
 
                                     switch (key) {
-                                        case "indexBoCommandAutoManual" -> {
-                                            log.info("Action: AUTO/MANUAL command for MEAS_");
-                                            // your logic here
+                                        case "indexBoCommandRaiseLower" -> {
+                                            log.info("Action: RAISE/LOWER command for MEAS_");
+                                            databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            Double analogInput = databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
+                                            double updateValue;
+                                            if (valueOpType) {
+                                                updateValue = analogInput + 1.0;
+                                                databaseService.updateValueAnalogInput(ENDPOINT, measurementModel.getIndexAiValue(), updateValue);
+                                            } else {
+                                                updateValue = analogInput - 1.0;
+                                                databaseService.updateValueAnalogInput(ENDPOINT, measurementModel.getIndexAiValue(), updateValue);
+                                            }
 
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }
