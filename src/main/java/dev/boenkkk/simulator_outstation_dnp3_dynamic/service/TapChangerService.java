@@ -59,7 +59,7 @@ public class TapChangerService {
             .stream()
             .filter(TapChangerModel.class::isInstance)
             .map(TapChangerModel.class::cast)
-            .filter(model -> model.equals(PREFIX_NAME + name))
+            .filter(model -> model.getName().equals(PREFIX_NAME + name))
             .findFirst()
             .orElse(null);
     }

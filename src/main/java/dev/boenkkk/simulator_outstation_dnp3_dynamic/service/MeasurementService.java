@@ -59,7 +59,7 @@ public class MeasurementService {
             .stream()
             .filter(MeasurementModel.class::isInstance)
             .map(MeasurementModel.class::cast)
-            .filter(model -> model.equals(PREFIX_NAME + name))
+            .filter(model -> model.getName().equals(PREFIX_NAME + name))
             .findFirst()
             .orElse(null);
     }

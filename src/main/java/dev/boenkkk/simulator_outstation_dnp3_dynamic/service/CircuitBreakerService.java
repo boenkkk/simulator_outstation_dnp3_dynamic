@@ -53,7 +53,7 @@ public class CircuitBreakerService {
             .stream()
             .filter(CircuitBreakerModel.class::isInstance)
             .map(CircuitBreakerModel.class::cast)
-            .filter(model -> name.equals(model.getName()))
+            .filter(model -> model.getName().equals(PREFIX_NAME + name))
             .findFirst()
             .orElse(null);
     }
