@@ -53,7 +53,7 @@ public class MeasurementService {
     }
 
     public MeasurementModel getData(String name) {
-        return outstationsService.getOutstationData(ENDPOINT)
+        MeasurementModel measurementModel = outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
@@ -62,16 +62,34 @@ public class MeasurementService {
             .filter(model -> model.getName().equals(PREFIX_NAME + name))
             .findFirst()
             .orElse(null);
+
+        // set values
+        Double measurementValue = databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
+        Boolean autoManualValue = databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual());
+        measurementModel.setValue(measurementValue);
+        measurementModel.setValueAutoManual(autoManualValue);
+
+        return measurementModel;
     }
 
     public List<MeasurementModel> getAll() {
-        return outstationsService.getOutstationData(ENDPOINT)
+        List<MeasurementModel> measurementModels = outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
             .filter(MeasurementModel.class::isInstance)
             .map(MeasurementModel.class::cast)
             .toList();
+
+        // set values
+        measurementModels.forEach(measurementModel -> {
+            Double measurementValue = databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
+            Boolean autoManualValue = databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual());
+            measurementModel.setValue(measurementValue);
+            measurementModel.setValueAutoManual(autoManualValue);
+        });
+
+        return measurementModels;
     }
 
     public void deleteData(MeasurementModel measurementModel) {

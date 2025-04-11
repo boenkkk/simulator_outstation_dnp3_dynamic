@@ -1,8 +1,10 @@
 package dev.boenkkk.simulator_outstation_dnp3_dynamic.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class MeasurementModel {
 
     private String name;
@@ -12,4 +14,6 @@ public class MeasurementModel {
     private Integer intervalScheduler;
     private Double valueMin;
     private Double valueMax;
+    private Double value;
+    private Boolean valueAutoManual;
 }
