@@ -47,7 +47,7 @@ public class CircuitBreakerService {
     }
 
     public CircuitBreakerModel getData(String name) {
-        return outstationsService.getOutstationData(ENDPOINT)
+        CircuitBreakerModel circuitBreakerModel = outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
@@ -56,16 +56,29 @@ public class CircuitBreakerService {
             .filter(model -> model.getName().equals(PREFIX_NAME + name))
             .findFirst()
             .orElse(null);
+
+        // set values
+        circuitBreakerModel.setValue(databaseService.getDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue()).ordinal());
+        circuitBreakerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote()));
+
+        return circuitBreakerModel;
     }
 
     public List<CircuitBreakerModel> getAll() {
-        return outstationsService.getOutstationData(ENDPOINT)
+        List<CircuitBreakerModel> circuitBreakerModels = outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
             .filter(CircuitBreakerModel.class::isInstance)
             .map(CircuitBreakerModel.class::cast)
             .toList();
+
+        circuitBreakerModels.forEach(circuitBreakerModel -> {
+            circuitBreakerModel.setValue(databaseService.getDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue()).ordinal());
+            circuitBreakerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote()));
+        });
+
+        return circuitBreakerModels;
     }
 
     public void deleteData(CircuitBreakerModel circuitBreakerModel) {

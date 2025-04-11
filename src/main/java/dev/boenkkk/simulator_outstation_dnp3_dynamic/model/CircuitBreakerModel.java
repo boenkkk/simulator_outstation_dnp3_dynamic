@@ -10,4 +10,6 @@ public class CircuitBreakerModel {
     private Integer indexBoCommandOpenClose;
     private Integer indexBoCommandInvalid;
     private Integer indexBoCommandLocalRemote;
+    private Integer value;
+    private Boolean valueLocalRemote;
 }
