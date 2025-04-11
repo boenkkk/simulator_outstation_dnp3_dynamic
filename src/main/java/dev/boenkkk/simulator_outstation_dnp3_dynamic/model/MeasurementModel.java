@@ -9,4 +9,7 @@ public class MeasurementModel {
     private Integer indexAiValue;
     private Integer indexBoCommandRaiseLower;
     private Integer indexBoCommandAutoManual;
+    private Integer intervalScheduler;
+    private Double valueMin;
+    private Double valueMax;
 }
