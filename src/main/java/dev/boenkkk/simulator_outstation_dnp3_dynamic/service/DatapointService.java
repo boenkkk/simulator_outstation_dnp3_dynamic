@@ -127,6 +127,17 @@ public class DatapointService {
 
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }
+                                        case "indexBoCommandAutoManual" -> {
+                                            log.info("Action: AUTO/MANUAL command for TC_");
+                                            databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+
+                                            Boolean valueAutoManual = databaseService.getBinaryOutput(ENDPOINT, index.intValue());
+                                            // scheduler action
+                                            boolean switchedBoolean = !valueAutoManual;
+                                            schedulerTask.toggleScheduler(tapChangerModel.getName(), switchedBoolean, tapChangerModel.getIntervalScheduler(), tapChangerModel.getIndexAiValue(), tapChangerModel.getValueMin(), tapChangerModel.getValueMax());
+
+                                            commandStatus.set(CommandStatus.SUCCESS);
+                                        }
                                         default -> {
                                             log.warn("Unhandled key for TC_: {}", key);
                                             commandStatus.set(CommandStatus.UNKNOWN);

@@ -10,4 +10,7 @@ public class TapChangerModel {
     private Integer indexBoCommandRaiseLower;
     private Integer indexBoCommandAutoManual;
     private Integer indexBoCommandLocalRemote;
+    private Integer intervalScheduler;
+    private Double valueMin;
+    private Double valueMax;
 }

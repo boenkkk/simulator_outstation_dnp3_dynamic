@@ -2,6 +2,7 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.OutstationBean;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.TapChangerModel;
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.scheduler.SchedulerTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +22,12 @@ public class TapChangerService {
 
     private final DatabaseService databaseService;
     private final OutstationsService outstationsService;
+    private final SchedulerTask schedulerTask;
 
-    public TapChangerService(DatabaseService databaseService, OutstationsService outstationsService) {
+    public TapChangerService(DatabaseService databaseService, OutstationsService outstationsService, SchedulerTask schedulerTask) {
         this.databaseService = databaseService;
         this.outstationsService = outstationsService;
+        this.schedulerTask = schedulerTask;
     }
 
     public void addData(TapChangerModel tapChangeModel) {
@@ -44,6 +47,9 @@ public class TapChangerService {
 
             outstationData.setListDataPoints(dataPoints);
         });
+
+        // scheduler add
+        schedulerTask.toggleScheduler(tapChangeModel.getName(), true, tapChangeModel.getIntervalScheduler(), tapChangeModel.getIndexAiValue(), tapChangeModel.getValueMin(), tapChangeModel.getValueMax());
     }
 
     public TapChangerModel getData(String name) {
