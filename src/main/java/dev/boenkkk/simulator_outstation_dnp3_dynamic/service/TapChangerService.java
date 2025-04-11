@@ -53,7 +53,7 @@ public class TapChangerService {
     }
 
     public TapChangerModel getData(String name) {
-        return outstationsService.getOutstationData(ENDPOINT)
+        TapChangerModel tapChangerModel = outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
@@ -62,16 +62,32 @@ public class TapChangerService {
             .filter(model -> model.getName().equals(PREFIX_NAME + name))
             .findFirst()
             .orElse(null);
+
+        // set values
+        tapChangerModel.setValue(databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue()));
+        tapChangerModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
+        tapChangerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+
+        return tapChangerModel;
     }
 
     public List<TapChangerModel> getAll() {
-        return outstationsService.getOutstationData(ENDPOINT)
+        List<TapChangerModel> tapChangerModels = outstationsService.getOutstationData(ENDPOINT)
             .map(OutstationBean.OutstationData::getListDataPoints)
             .orElse(Collections.emptyList())
             .stream()
             .filter(TapChangerModel.class::isInstance)
             .map(TapChangerModel.class::cast)
             .toList();
+
+        // set values
+        tapChangerModels.forEach(tapChangerModel -> {
+            tapChangerModel.setValue(databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue()));
+            tapChangerModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
+            tapChangerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+        });
+
+        return tapChangerModels;
     }
 
     public void deleteData(TapChangerModel tapChangerModel) {
