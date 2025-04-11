@@ -3,6 +3,7 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.CircuitBreakerModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.MeasurementModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.TapChangerModel;
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.scheduler.SchedulerTask;
 
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicReference;
@@ -11,11 +12,9 @@ import org.joou.UShort;
 import org.springframework.stereotype.Service;
 
 import io.stepfunc.dnp3.CommandStatus;
-import io.stepfunc.dnp3.DatabaseHandle;
 import io.stepfunc.dnp3.DoubleBit;
 import io.stepfunc.dnp3.Group12Var1;
 import io.stepfunc.dnp3.OpType;
-import io.stepfunc.dnp3.OperateType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,13 +26,16 @@ public class DatapointService {
 
     private final OutstationsService outstationsService;
     private final DatabaseService databaseService;
+    private final SchedulerTask schedulerTask;
 
-    public DatapointService(OutstationsService outstationsService, DatabaseService databaseService) {
+    public DatapointService(OutstationsService outstationsService, DatabaseService databaseService, SchedulerTask schedulerTask
+    ) {
         this.outstationsService = outstationsService;
         this.databaseService = databaseService;
+        this.schedulerTask = schedulerTask;
     }
 
-    public CommandStatus operateBinaryOutput(Group12Var1 control, UShort index, OperateType opType, DatabaseHandle database) {
+    public CommandStatus operateBinaryOutput(Group12Var1 control, UShort index) {
         AtomicReference<CommandStatus> commandStatus = new AtomicReference<>();
         boolean valueOpType = control.code.opType == OpType.LATCH_ON;
 
@@ -146,6 +148,17 @@ public class DatapointService {
                                                 updateValue = analogInput - 1.0;
                                                 databaseService.updateValueAnalogInput(ENDPOINT, measurementModel.getIndexAiValue(), updateValue);
                                             }
+
+                                            commandStatus.set(CommandStatus.SUCCESS);
+                                        }
+                                        case "indexBoCommandAutoManual" -> {
+                                            log.info("Action: AUTO/MANUAL command for MEAS_");
+                                            databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+
+                                            Boolean valueAutoManual = databaseService.getBinaryOutput(ENDPOINT, index.intValue());
+                                            // scheduler action
+                                            boolean switchedBoolean = !valueAutoManual;
+                                            schedulerTask.toggleScheduler(measurementModel.getName(), switchedBoolean, measurementModel.getIntervalScheduler(), measurementModel.getIndexAiValue(), measurementModel.getValueMin(), measurementModel.getValueMax());
 
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }

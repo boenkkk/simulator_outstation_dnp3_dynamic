@@ -2,6 +2,7 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.MeasurementModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.OutstationBean;
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.scheduler.SchedulerTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,10 +22,13 @@ public class MeasurementService {
 
     private final DatabaseService databaseService;
     private final OutstationsService outstationsService;
+    private final SchedulerTask schedulerTask;
 
-    public MeasurementService(DatabaseService databaseService, OutstationsService outstationsService) {
+    public MeasurementService(DatabaseService databaseService, OutstationsService outstationsService, SchedulerTask schedulerTask
+    ) {
         this.databaseService = databaseService;
         this.outstationsService = outstationsService;
+        this.schedulerTask = schedulerTask;
     }
 
     public void addData(MeasurementModel measurementModel) {
@@ -43,6 +47,9 @@ public class MeasurementService {
 
             outstationData.setListDataPoints(dataPoints);
         });
+
+        // scheduler add
+        schedulerTask.toggleScheduler(measurementModel.getName(), true, measurementModel.getIntervalScheduler(), measurementModel.getIndexAiValue(), measurementModel.getValueMin(), measurementModel.getValueMax());
     }
 
     public MeasurementModel getData(String name) {
