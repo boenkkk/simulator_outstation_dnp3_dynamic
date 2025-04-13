@@ -43,18 +43,20 @@ public class CircuitBreakerController {
     }
 
     @PostMapping("/add-data")
-    public ResponseEntity<String> addData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
+    public ResponseEntity<List<CircuitBreakerModel>> addData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
         log.info("req: {}", circuitBreakerModel);
         circuitBreakerService.addData(circuitBreakerModel);
 
-        return ResponseEntity.ok("add-data");
+        List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
+        return ResponseEntity.ok(datas);
     }
 
     @DeleteMapping("/delete-data")
-    public ResponseEntity<String> deleteData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
+    public ResponseEntity<List<CircuitBreakerModel>> deleteData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
         log.info("req: {}", circuitBreakerModel);
         circuitBreakerService.deleteData(circuitBreakerModel);
 
-        return ResponseEntity.ok("delete-data");
+        List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
+        return ResponseEntity.ok(datas);
     }
 }
