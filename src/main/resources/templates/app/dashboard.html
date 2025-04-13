@@ -1,0 +1,21 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <script>
+        // Determine the base URL dynamically
+        let baseURL = `${window.location.protocol}//${window.location.hostname}`;
+        let socketPort = 47772;
+        let socketEndpoint = `${baseURL}:${socketPort}`;
+    </script>
+
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row no-gutters">
+                <!-- Column 1 -->
+                <div th:replace="app/component/circuit-breaker :: circuit-breaker"></div>
+                <!-- Column 2 -->
+                <div th:replace="app/component/tap-changer :: tap-changer"></div>
+                <!-- Column 3 -->
+                <div th:replace="app/component/measurement :: measurement"></div>
+            </div>
+        </div>
+    </div>
+</div>
