@@ -1,0 +1,9 @@
+<div class="col-md-4" th:fragment="circuit-breaker">
+    <div class="p-4 border bg-light text-center">
+
+        <h5>Circuit Breaker</h5>
+        <button class="btn btn-primary m-1" data-toggle="modal" data-target="#addCircuitBreakerModal" th:ref="addButton">Add</button>
+        <button class="btn btn-danger m-1" th:onclick="removeCircuitBreakerElement()" th:ref="removeButton">Remove</button>
+
+    </div>
+</div>
