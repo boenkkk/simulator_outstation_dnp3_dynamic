@@ -209,6 +209,32 @@
             });
         }
 
+        function deleteTapChanger() {
+            var tapChanerName = prompt("Enter the name of the tap changer to delete:");
+            if (tapChanerName) {
+                if (confirm("Are you sure you want to delete tap changer: " + tapChanerName + "?")) {
+                    var tapChangerModel = {
+                        name: tapChanerName
+                    };
+
+                    $.ajax({
+                        url: "/tap-changer/delete-data",
+                        type: "DELETE",
+                        contentType: "application/json",
+                        data: JSON.stringify(tapChangerModel),
+                        success: function (data) {
+                            updateTapChangerElements();
+                            alert("Tap Changer deleted successfully!");
+                        },
+                        error: function (error) {
+                            console.error("Error deleting tap changer:", error);
+                            alert("Error deleting tap changer: " + error.responseText);
+                        }
+                    });
+                }
+            }
+        }
+
         $(document).ready(function () {
             updateTapChangerElements();
         });
