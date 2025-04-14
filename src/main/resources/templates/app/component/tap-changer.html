@@ -2,15 +2,96 @@
     <div class="p-4 border bg-light text-center">
 
         <h5>Tap Changer</h5>
-        <button class="btn btn-primary m-1">Add</button>
-        <button class="btn btn-danger m-1">Remove</button>
+        <button class="btn btn-primary m-1" data-target="#addTapChangerModal" data-toggle="modal"
+                th:ref="addButton">Add
+        </button>
+        <button class="btn btn-danger m-1" onclick="deleteTapChanger()">Delete</button>
 
         <div id="tapChangerContainer">
         </div>
     </div>
 
+    <!-- Modal Add -->
+    <div aria-hidden="true" aria-labelledby="addTapChangerModalLabel" class="modal fade" id="addTapChangerModal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTapChangerModalLabel">Add Tap Changer</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTapChangerForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input class="form-control" id="tcName" required type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="indexAiValue">Index Ai Value</label>
+                            <input class="form-control" id="tcIndexAiValue" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="indexBoCommandRaiseLower">Index Bo Command Raise Lower</label>
+                            <input class="form-control" id="tcIndexBoCommandRaiseLower" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="indexBoCommandAutoManual">Index Bo Command Auto Manual</label>
+                            <input class="form-control" id="tcIndexBoCommandAutoManual" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="indexBoCommandLocalRemote">Index Bo Command Local Remote</label>
+                            <input class="form-control" id="tcIndexBoCommandLocalRemote" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="intervalScheduler">Interval Scheduler</label>
+                            <input class="form-control" id="tcIntervalScheduler" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="valueMin">Value Min</label>
+                            <input class="form-control" id="tcValueMin" max="32" min="0" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="valueMax">Value Max</label>
+                            <input class="form-control" id="tcValueMax" max="32" min="0" required type="number">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" onclick="submitAddTapChangerForm()" type="button">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         var tapChangerElements = [];
+
+        function submitAddTapChangerForm() {
+            var tapChangerModel = {
+                name: $("#tcName").val(),
+                index_ai_value: parseInt($("#tcIndexAiValue").val()),
+                index_bo_command_raise_lower: parseInt($("#tcIndexBoCommandRaiseLower").val()),
+                index_bo_command_auto_manual: parseInt($("#tcIndexBoCommandAutoManual").val()),
+                index_bo_command_local_remote: parseInt($("#tcIndexBoCommandLocalRemote").val()),
+                interval_scheduler: parseInt($("#tcIntervalScheduler").val()),
+                value_min: parseInt($("#tcValueMin").val()),
+                value_max: parseInt($("#tcValueMax").val())
+            };
+
+            $.ajax({
+                url: "/tap-changer/add-data",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(tapChangerModel),
+                success: function (data) {
+                    updateTapChangerElements();
+                    $('#addTapChangerModal').modal('hide');
+                }
+            });
+        }
 
         function updateTapChangerElements() {
             $.ajax({
