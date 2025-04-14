@@ -34,7 +34,7 @@ public class TapChangerModel {
     private Double valueMax;
 
     @JsonProperty("value")
-    private Double value;
+    private Integer value;
 
     @JsonProperty("value_raise_lower")
     private Boolean valueRaiseLower;

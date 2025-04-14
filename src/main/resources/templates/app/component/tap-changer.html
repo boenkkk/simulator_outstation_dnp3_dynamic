@@ -5,5 +5,131 @@
         <button class="btn btn-primary m-1">Add</button>
         <button class="btn btn-danger m-1">Remove</button>
 
+        <div id="tapChangerContainer">
+        </div>
     </div>
+
+    <script>
+        var tapChangerElements = [];
+
+        function updateTapChangerElements() {
+            $.ajax({
+                url: "/tap-changer/get-all",
+                type: "GET",
+                contentType: "application/json",
+                success: function (data) {
+                    $("#tapChangerContainer").empty();
+                    $.each(data, function (index, tapChanger) {
+                        var tapChangerHtml = `
+                             <div class="elements border-top border-bottom">
+                                <div class="row justify-content-center">
+                                     <div class="container mt-3">
+                                         <pre id="jsonView" style="overflow-x: auto; text-align: left;">${JSON.stringify(tapChanger, null, 2)}</pre>
+                                     </div>
+                                </div>
+
+                                <div id="number-display" style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">${tapChanger.value}</div>
+
+                                <div class="d-flex justify-content-center mb-3">
+                                    <div class="control-knob dark mx-2">
+                                        <input id="checkbox-auto-manual-${tapChanger.name}" type="checkbox" onclick="actionAutoManual(${tapChanger.index_bo_command_auto_manual}, ${tapChanger.value_auto_manual})">
+                                        <div class="control-position on">
+                                            <span>AUTO</span>
+                                        </div>
+                                        <div class="control-position off">
+                                            <span>MANUAL</span>
+                                        </div>
+                                        <div class="knob">
+                                            <div class="knob-center"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="control-knob dark mx-2">
+                                        <input id="checkbox-local-remote-${tapChanger.name}" type="checkbox" onclick="actionLocalRemote(${tapChanger.index_bo_command_local_remote}, ${tapChanger.value_local_remote})">
+                                        <div class="control-position on">
+                                            <span>LOCAL</span>
+                                        </div>
+                                        <div class="control-position off">
+                                            <span>REMOTE</span>
+                                        </div>
+                                        <div class="knob">
+                                            <div class="knob-center"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <button class="adjust-button btn btn-success" id="increase-${tapChanger.name}" onclick="actionRaiseLower(${tapChanger.index_bo_command_raise_lower}, true)">Raise</button>
+                                    <button class="adjust-button btn btn-danger" id="decrease-${tapChanger.name}" onclick="actionRaiseLower(${tapChanger.index_bo_command_raise_lower}, false)">Lower</button>
+                                </div>
+                            </div>
+                         `;
+                        $("#tapChangerContainer").append(tapChangerHtml);
+
+                        // auto manual condition
+                        let tcAutoManualValue = tapChanger.value_auto_manual == 1 ? true : false;
+                        $("#checkbox-auto-manual-" + tapChanger.name).attr("checked", tcAutoManualValue);
+
+                        // local remote condition
+                        let tcLocalRemoteValue = tapChanger.value_local_remote == 1 ? true : false;
+                        $("#checkbox-local-remote-" + tapChanger.name).attr("checked", tcLocalRemoteValue);
+                    });
+                }
+            });
+        }
+
+        function actionRaiseLower(index, value) {
+            var tapChangerModel = {
+                index_bo_command_raise_lower: index,
+                value_raise_lower: value
+            };
+            $.ajax({
+                url: "/tap-changer/action-raise-lower",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(tapChangerModel),
+                success: function (data) {
+                    updateTapChangerElements();
+                }
+            });
+        }
+
+        function actionAutoManual(index, value) {
+            let switchValue = value ? false : true;
+            var tapChangerModel = {
+                index_bo_command_auto_manual: index,
+                value_auto_manual: switchValue
+            };
+            $.ajax({
+                url: "/tap-changer/action-auto-manual",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(tapChangerModel),
+                success: function (data) {
+                    updateTapChangerElements();
+                }
+            });
+        }
+
+        function actionLocalRemote(index, value) {
+            let switchValue = value ? false : true;
+            var tapChangerModel = {
+                index_bo_command_local_remote: index,
+                value_local_remote: switchValue
+            };
+            $.ajax({
+                url: "/tap-changer/action-local-remote",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(tapChangerModel),
+                success: function (data) {
+                    updateTapChangerElements();
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            updateTapChangerElements();
+        });
+    </script>
 </div>
