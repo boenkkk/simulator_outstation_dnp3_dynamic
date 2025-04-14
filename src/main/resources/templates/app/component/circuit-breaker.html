@@ -105,10 +105,10 @@
                                  </div>
 
                                  <div class="row justify-content-center">
-                                     <button class="btn btn-warning rounded-circle small-btn" id="cb-invalid-0">INV 0</button>
-                                     <button class="btn btn-success rounded-circle fixed-wh-5em" id="cb-open-close-btn-close">Close</button>
-                                     <button class="btn btn-danger rounded-circle fixed-wh-5em" id="cb-open-close-btn-open">Open</button>
-                                     <button class="btn btn-warning rounded-circle small-btn" id="cb-invalid-1">INV 1</button>
+                                     <button class="btn btn-warning rounded-circle small-btn" onclick="actionInvalid(${circuitBreaker.index_bo_command_invalid}, false)">INV 0</button>
+                                     <button class="btn btn-success rounded-circle fixed-wh-5em" onclick="actionOpenClose(${circuitBreaker.index_bo_command_open_close}, false)">Close</button>
+                                     <button class="btn btn-danger rounded-circle fixed-wh-5em" onclick="actionOpenClose(${circuitBreaker.index_bo_command_open_close}, true)">Open</button>
+                                     <button class="btn btn-warning rounded-circle small-btn" onclick="actionInvalid(${circuitBreaker.index_bo_command_invalid}, true)">INV 1</button>
                                  </div>
 
                                  <div class="row justify-content-center">
@@ -130,12 +130,14 @@
                         $("#circuitBreakerContainer").append(circuitBreakerHtml);
 
                         // cb condition
-                        let cbValue = circuitBreaker.value == 2 ? true : false;
-                        if (cbValue) {
+                        if (circuitBreaker.value == 1) {
                             $("#cb-close-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-success");
                             $("#cb-open-" + circuitBreaker.name).removeClass("btn-danger").addClass("btn-secondary");
-                        } else {
+                        } else if (circuitBreaker.value == 2) {
                             $("#cb-close-" + circuitBreaker.name).removeClass("btn-success").addClass("btn-secondary");
+                            $("#cb-open-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-danger");
+                        } else {
+                            $("#cb-close-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-success");
                             $("#cb-open-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-danger");
                         }
 
@@ -143,6 +145,38 @@
                         let cbLocalRemoteValue = circuitBreaker.value_local_remote == 1 ? true : false;
                         $("#checkbox-local-remote-" + circuitBreaker.name).attr("checked", cbLocalRemoteValue);
                     });
+                }
+            });
+        }
+
+        function actionOpenClose(index, value) {
+            var circuitBreakerModel = {
+                index_bo_command_open_close: index,
+                value_open_close: value
+            };
+            $.ajax({
+                url: "/circuit-breaker/action-open-close",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(circuitBreakerModel),
+                success: function (data) {
+                    updateCircuitBreakerElements();
+                }
+            });
+        }
+
+        function actionInvalid(index, value) {
+            var circuitBreakerModel = {
+                index_bo_command_invalid: index,
+                value_invalid: value
+            };
+            $.ajax({
+                url: "/circuit-breaker/action-invalid",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(circuitBreakerModel),
+                success: function (data) {
+                    updateCircuitBreakerElements();
                 }
             });
         }

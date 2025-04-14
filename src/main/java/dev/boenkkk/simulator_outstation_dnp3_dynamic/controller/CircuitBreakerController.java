@@ -59,4 +59,22 @@ public class CircuitBreakerController {
         List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
         return ResponseEntity.ok(datas);
     }
+
+    @PostMapping("/action-open-close")
+    public ResponseEntity<List<CircuitBreakerModel>> actionOpenClose(@RequestBody CircuitBreakerModel circuitBreakerModel) {
+        log.info("req: {}", circuitBreakerModel);
+        circuitBreakerService.actionOpenClose(circuitBreakerModel);
+
+        List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
+        return ResponseEntity.ok(datas);
+    }
+
+    @PostMapping("/action-invalid")
+    public ResponseEntity<List<CircuitBreakerModel>> actionInvalid(@RequestBody CircuitBreakerModel circuitBreakerModel) {
+        log.info("req: {}", circuitBreakerModel);
+        circuitBreakerService.actionInvalid(circuitBreakerModel);
+
+        List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
+        return ResponseEntity.ok(datas);
+    }
 }

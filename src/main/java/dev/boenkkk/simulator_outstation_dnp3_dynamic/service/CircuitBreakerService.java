@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.joou.UShort;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -21,10 +22,12 @@ public class CircuitBreakerService {
 
     private final DatabaseService databaseService;
     private final OutstationsService outstationsService;
+    private final DatapointService datapointService;
 
-    public CircuitBreakerService(DatabaseService databaseService, OutstationsService outstationsService) {
+    public CircuitBreakerService(DatabaseService databaseService, OutstationsService outstationsService, DatapointService datapointService) {
         this.databaseService = databaseService;
         this.outstationsService = outstationsService;
+        this.datapointService = datapointService;
     }
 
     public void addData(CircuitBreakerModel circuitBreakerModel) {
@@ -110,5 +113,13 @@ public class CircuitBreakerService {
                 });
             }
         });
+    }
+
+    public void actionOpenClose(CircuitBreakerModel circuitBreakerModel) {
+        datapointService.operateBinaryOutput(circuitBreakerModel.getValueOpenClose(), UShort.valueOf(circuitBreakerModel.getIndexBoCommandOpenClose()));
+    }
+
+    public void actionInvalid(CircuitBreakerModel circuitBreakerModel) {
+        datapointService.operateBinaryOutput(circuitBreakerModel.getValueInvalid(), UShort.valueOf(circuitBreakerModel.getIndexBoCommandInvalid()));
     }
 }
