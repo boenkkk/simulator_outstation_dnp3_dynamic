@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.joou.UShort;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,13 @@ public class TapChangerService {
     private final DatabaseService databaseService;
     private final OutstationsService outstationsService;
     private final SchedulerTask schedulerTask;
+    private final DatapointService datapointService;
 
-    public TapChangerService(DatabaseService databaseService, OutstationsService outstationsService, SchedulerTask schedulerTask) {
+    public TapChangerService(DatabaseService databaseService, OutstationsService outstationsService, SchedulerTask schedulerTask, DatapointService datapointService) {
         this.databaseService = databaseService;
         this.outstationsService = outstationsService;
         this.schedulerTask = schedulerTask;
+        this.datapointService = datapointService;
     }
 
     public void addData(TapChangerModel tapChangeModel) {
@@ -115,5 +118,17 @@ public class TapChangerService {
                 });
             }
         });
+    }
+
+    public void actionRaiseLower(TapChangerModel tapChangerModel) {
+        datapointService.operateBinaryOutput(tapChangerModel.getValueRaiseLower(), UShort.valueOf(tapChangerModel.getIndexBoCommandRaiseLower()));
+    }
+
+    public void actionAutoManual(TapChangerModel tapChangerModel) {
+        datapointService.operateBinaryOutput(tapChangerModel.getValueAutoManual(), UShort.valueOf(tapChangerModel.getIndexBoCommandAutoManual()));
+    }
+
+    public void actionLocalRemote(TapChangerModel tapChangerModel) {
+        datapointService.operateBinaryOutput(tapChangerModel.getValueLocalRemote(), UShort.valueOf(tapChangerModel.getIndexBoCommandLocalRemote()));
     }
 }

@@ -57,5 +57,32 @@ public class TapChangerController {
 
         return ResponseEntity.ok("delete-data");
     }
+
+    @PostMapping("/action-raise-lower")
+    public ResponseEntity<List<TapChangerModel>> actionRaiseLower(@RequestBody TapChangerModel tapChangerModel) {
+        log.info("req: {}", tapChangerModel);
+        tapChangerService.actionRaiseLower(tapChangerModel);
+
+        List<TapChangerModel> datas = tapChangerService.getAll();
+        return ResponseEntity.ok(datas);
+    }
+
+    @PostMapping("/action-auto-manual")
+    public ResponseEntity<List<TapChangerModel>> actionAutoManual(@RequestBody TapChangerModel tapChangerModel) {
+        log.info("req: {}", tapChangerModel);
+        tapChangerService.actionAutoManual(tapChangerModel);
+
+        List<TapChangerModel> datas = tapChangerService.getAll();
+        return ResponseEntity.ok(datas);
+    }
+
+    @PostMapping("/action-local-remote")
+    public ResponseEntity<List<TapChangerModel>> actionLocalRemote(@RequestBody TapChangerModel tapChangerModel) {
+        log.info("req: {}", tapChangerModel);
+        tapChangerService.actionLocalRemote(tapChangerModel);
+
+        List<TapChangerModel> datas = tapChangerService.getAll();
+        return ResponseEntity.ok(datas);
+    }
 }
 
