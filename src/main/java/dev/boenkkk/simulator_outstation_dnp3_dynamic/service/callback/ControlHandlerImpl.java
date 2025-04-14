@@ -60,7 +60,9 @@ public class ControlHandlerImpl implements ControlHandler {
         log.info(message);
 
         if (control.code.opType == OpType.LATCH_ON || control.code.opType == OpType.LATCH_OFF) {
-            return datapointService.operateBinaryOutput(control, index);
+            boolean valueOpType = control.code.opType == OpType.LATCH_ON;
+
+            return datapointService.operateBinaryOutput(valueOpType, index);
         } else {
             return CommandStatus.NOT_SUPPORTED;
         }

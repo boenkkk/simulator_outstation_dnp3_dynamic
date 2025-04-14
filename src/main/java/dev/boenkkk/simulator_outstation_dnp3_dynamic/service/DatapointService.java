@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import io.stepfunc.dnp3.CommandStatus;
 import io.stepfunc.dnp3.DoubleBit;
-import io.stepfunc.dnp3.Group12Var1;
-import io.stepfunc.dnp3.OpType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,9 +33,8 @@ public class DatapointService {
         this.schedulerTask = schedulerTask;
     }
 
-    public CommandStatus operateBinaryOutput(Group12Var1 control, UShort index) {
+    public CommandStatus operateBinaryOutput(Boolean valueOpType, UShort index) {
         AtomicReference<CommandStatus> commandStatus = new AtomicReference<>();
-        boolean valueOpType = control.code.opType == OpType.LATCH_ON;
 
         outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData ->
             outstationData.getListDataPoints().forEach(obj -> {
