@@ -59,6 +59,8 @@ public class CircuitBreakerService {
 
         // set values
         circuitBreakerModel.setValue(databaseService.getDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue()).ordinal());
+        circuitBreakerModel.setValueOpenClose(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandOpenClose()));
+        circuitBreakerModel.setValueInvalid(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandInvalid()));
         circuitBreakerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote()));
 
         return circuitBreakerModel;
@@ -75,6 +77,8 @@ public class CircuitBreakerService {
 
         circuitBreakerModels.forEach(circuitBreakerModel -> {
             circuitBreakerModel.setValue(databaseService.getDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue()).ordinal());
+            circuitBreakerModel.setValueOpenClose(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandOpenClose()));
+            circuitBreakerModel.setValueInvalid(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandInvalid()));
             circuitBreakerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote()));
         });
 
