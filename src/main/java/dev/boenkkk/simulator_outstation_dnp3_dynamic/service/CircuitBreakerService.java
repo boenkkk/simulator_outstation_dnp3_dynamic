@@ -122,4 +122,8 @@ public class CircuitBreakerService {
     public void actionInvalid(CircuitBreakerModel circuitBreakerModel) {
         datapointService.operateBinaryOutput(circuitBreakerModel.getValueInvalid(), UShort.valueOf(circuitBreakerModel.getIndexBoCommandInvalid()));
     }
+
+    public void actionLocalRemote(CircuitBreakerModel circuitBreakerModel) {
+        datapointService.operateBinaryOutput(circuitBreakerModel.getValueLocalRemote(), UShort.valueOf(circuitBreakerModel.getIndexBoCommandLocalRemote()));
+    }
 }

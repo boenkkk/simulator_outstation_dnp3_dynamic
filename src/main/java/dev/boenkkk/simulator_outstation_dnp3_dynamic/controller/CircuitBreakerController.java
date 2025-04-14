@@ -77,4 +77,13 @@ public class CircuitBreakerController {
         List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
         return ResponseEntity.ok(datas);
     }
+
+    @PostMapping("/action-local-remote")
+    public ResponseEntity<List<CircuitBreakerModel>> actionLocalRemote(@RequestBody CircuitBreakerModel circuitBreakerModel) {
+        log.info("req: {}", circuitBreakerModel);
+        circuitBreakerService.actionLocalRemote(circuitBreakerModel);
+
+        List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
+        return ResponseEntity.ok(datas);
+    }
 }

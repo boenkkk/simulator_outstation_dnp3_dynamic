@@ -113,7 +113,7 @@
 
                                  <div class="row justify-content-center">
                                      <div class="control-knob dark">
-                                         <input id="checkbox-local-remote-${circuitBreaker.name}" type="checkbox">
+                                         <input id="checkbox-local-remote-${circuitBreaker.name}" type="checkbox" onclick="actionLocalRemote(${circuitBreaker.index_bo_command_local_remote}, ${circuitBreaker.value_local_remote})">
                                          <div class="control-position on">
                                              <span >LOCAL</span>
                                          </div>
@@ -172,6 +172,23 @@
             };
             $.ajax({
                 url: "/circuit-breaker/action-invalid",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(circuitBreakerModel),
+                success: function (data) {
+                    updateCircuitBreakerElements();
+                }
+            });
+        }
+
+        function actionLocalRemote(index, value) {
+            let switchValue = value ? false : true;
+            var circuitBreakerModel = {
+                index_bo_command_local_remote: index,
+                value_local_remote: switchValue
+            };
+            $.ajax({
+                url: "/circuit-breaker/action-local-remote",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(circuitBreakerModel),
