@@ -222,6 +222,11 @@
 
         $(document).ready(function () {
             updateCircuitBreakerElements();
+
+            // auto update elements
+            setInterval(function () {
+                updateCircuitBreakerElements();
+            }, 1000);
         });
     </script>
 </div>
