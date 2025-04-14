@@ -26,28 +26,24 @@
                 <div class="modal-body">
                     <form id="addCircuitBreakerForm">
                         <div class="form-group">
-                            <label for="name">Name</label>
-                            <input class="form-control" id="name" name="name" required type="text">
+                            <label for="cbName">Name</label>
+                            <input class="form-control" id="cbName" required type="text">
                         </div>
                         <div class="form-group">
-                            <label for="indexDbbiValue">Index Dbbi Value</label>
-                            <input class="form-control" id="indexDbbiValue" name="indexDbbiValue" required
-                                   type="number">
+                            <label for="cbIndexDbbiValue">Index Dbbi Value</label>
+                            <input class="form-control" id="cbIndexDbbiValue" min="0" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="indexBoCommandOpenClose">Index Bo Command Open Close</label>
-                            <input class="form-control" id="indexBoCommandOpenClose" name="indexBoCommandOpenClose"
-                                   required type="number">
+                            <label for="cbIndexBoCommandOpenClose">Index Bo Command Open Close</label>
+                            <input class="form-control" id="cbIndexBoCommandOpenClose" min="0" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="indexBoCommandInvalid">Index Bo Command Invalid</label>
-                            <input class="form-control" id="indexBoCommandInvalid" name="indexBoCommandInvalid"
-                                   required type="number">
+                            <label for="cbIndexBoCommandInvalid">Index Bo Command Invalid</label>
+                            <input class="form-control" id="cbIndexBoCommandInvalid" min="0" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="indexBoCommandLocalRemote">Index Bo Command Local Remote</label>
-                            <input class="form-control" id="indexBoCommandLocalRemote" name="indexBoCommandLocalRemote"
-                                   required type="number">
+                            <label for="cbIndexBoCommandLocalRemote">Index Bo Command Local Remote</label>
+                            <input class="form-control" id="cbIndexBoCommandLocalRemote" min="0" required type="number">
                         </div>
                     </form>
                 </div>
@@ -64,11 +60,11 @@
 
         function submitAddCircuitBreakerForm() {
             var circuitBreakerModel = {
-                name: $("#name").val(),
-                index_dbbi_value: parseInt($("#indexDbbiValue").val()),
-                index_bo_command_open_close: parseInt($("#indexBoCommandOpenClose").val()),
-                index_bo_command_invalid: parseInt($("#indexBoCommandInvalid").val()),
-                index_bo_command_local_remote: parseInt($("#indexBoCommandLocalRemote").val())
+                name: $("#cbName").val(),
+                index_dbbi_value: parseInt($("#cbIndexDbbiValue").val()),
+                index_bo_command_open_close: parseInt($("#cbIndexBoCommandOpenClose").val()),
+                index_bo_command_invalid: parseInt($("#cbIndexBoCommandInvalid").val()),
+                index_bo_command_local_remote: parseInt($("#cbIndexBoCommandLocalRemote").val())
             };
 
             $.ajax({
