@@ -2,7 +2,9 @@
     <div class="p-4 border bg-light text-center">
 
         <h5>Circuit Breaker</h5>
-        <button class="btn btn-primary m-1" data-toggle="modal" data-target="#addCircuitBreakerModal" th:ref="addButton">Add</button>
+        <button class="btn btn-primary m-1" data-target="#addCircuitBreakerModal" data-toggle="modal"
+                th:ref="addButton">Add
+        </button>
         <button class="btn btn-danger m-1" onclick="deleteCircuitBreaker()">Delete</button>
 
         <div id="circuitBreakerContainer">
@@ -11,12 +13,13 @@
     </div>
 
     <!-- Modal Add -->
-    <div class="modal fade" id="addCircuitBreakerModal" tabindex="-1" role="dialog" aria-labelledby="addCircuitBreakerModalLabel" aria-hidden="true">
+    <div aria-hidden="true" aria-labelledby="addCircuitBreakerModalLabel" class="modal fade" id="addCircuitBreakerModal"
+         role="dialog" tabindex="-1">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addCircuitBreakerModalLabel">Add Circuit Breaker</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -24,29 +27,33 @@
                     <form id="addCircuitBreakerForm">
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input class="form-control" id="name" name="name" required type="text">
                         </div>
                         <div class="form-group">
                             <label for="indexDbbiValue">Index Dbbi Value</label>
-                            <input type="number" class="form-control" id="indexDbbiValue" name="indexDbbiValue" required>
+                            <input class="form-control" id="indexDbbiValue" name="indexDbbiValue" required
+                                   type="number">
                         </div>
                         <div class="form-group">
                             <label for="indexBoCommandOpenClose">Index Bo Command Open Close</label>
-                            <input type="number" class="form-control" id="indexBoCommandOpenClose" name="indexBoCommandOpenClose" required>
+                            <input class="form-control" id="indexBoCommandOpenClose" name="indexBoCommandOpenClose"
+                                   required type="number">
                         </div>
                         <div class="form-group">
                             <label for="indexBoCommandInvalid">Index Bo Command Invalid</label>
-                            <input type="number" class="form-control" id="indexBoCommandInvalid" name="indexBoCommandInvalid" required>
+                            <input class="form-control" id="indexBoCommandInvalid" name="indexBoCommandInvalid"
+                                   required type="number">
                         </div>
                         <div class="form-group">
                             <label for="indexBoCommandLocalRemote">Index Bo Command Local Remote</label>
-                            <input type="number" class="form-control" id="indexBoCommandLocalRemote" name="indexBoCommandLocalRemote" required>
+                            <input class="form-control" id="indexBoCommandLocalRemote" name="indexBoCommandLocalRemote"
+                                   required type="number">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="submitAddCircuitBreakerForm()">Add</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" onclick="submitAddCircuitBreakerForm()" type="button">Add</button>
                 </div>
             </div>
         </div>
@@ -69,7 +76,7 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(circuitBreakerModel),
-                success: function(data) {
+                success: function (data) {
                     updateCircuitBreakerElements();
                     $('#addCircuitBreakerModal').modal('hide');
                 }
@@ -81,26 +88,20 @@
                 url: "/circuit-breaker/get-all",
                 type: "GET",
                 contentType: "application/json",
-                success: function(data) {
+                success: function (data) {
                     $("#circuitBreakerContainer").empty();
-                    $.each(data, function(index, circuitBreaker) {
+                    $.each(data, function (index, circuitBreaker) {
                         var circuitBreakerHtml = `
                              <div class="elements border-top border-bottom">
                                 <div class="row justify-content-center">
                                      <div class="container mt-3">
-                                         <h6>${circuitBreaker.name}</h6>
-                                         <ul class="list-group">
-                                             <li class="list-group-item d-flex justify-content-between">Value: Binary Input Index ${circuitBreaker.index_dbbi_value}</li>
-                                             <li class="list-group-item d-flex justify-content-between">Command Open/Close: Binary Output Index ${circuitBreaker.index_bo_command_open_close}</li>
-                                             <li class="list-group-item d-flex justify-content-between">Command Invalid: Binary Output Index ${circuitBreaker.index_bo_command_invalid}</li>
-                                             <li class="list-group-item d-flex justify-content-between">Command Local/Remote: Binary Output Index ${circuitBreaker.index_bo_command_local_remote}</li>
-                                         </ul>
+                                         <pre id="jsonView" style="overflow-x: auto; text-align: left;">${JSON.stringify(circuitBreaker, null, 2)}</pre>
                                      </div>
                                  </div>
 
                                  <div class="row justify-content-center mb-3">
-                                     <button id="btn-cb-open" class="custom-button btn btn-secondary cursor-disabled">CLOSE</button>
-                                     <button id="btn-cb-close" class="custom-button btn btn-danger cursor-disabled">OPEN</button>
+                                    <button id="cb-close-${circuitBreaker.name}" class="custom-button btn btn-success cursor-disabled">CLOSE</button>
+                                    <button id="cb-open-${circuitBreaker.name}" class="custom-button btn btn-secondary cursor-disabled">OPEN</button>
                                  </div>
 
                                  <div class="row justify-content-center">
@@ -112,7 +113,7 @@
 
                                  <div class="row justify-content-center">
                                      <div class="control-knob dark">
-                                         <input id="checkbox-local-remote" type="checkbox">
+                                         <input id="checkbox-local-remote-${circuitBreaker.name}" type="checkbox">
                                          <div class="control-position on">
                                              <span >LOCAL</span>
                                          </div>
@@ -127,6 +128,20 @@
                              </div>
                          `;
                         $("#circuitBreakerContainer").append(circuitBreakerHtml);
+
+                        // cb condition
+                        let cbValue = circuitBreaker.value == 2 ? true : false;
+                        if (cbValue) {
+                            $("#cb-close-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-success");
+                            $("#cb-open-" + circuitBreaker.name).removeClass("btn-danger").addClass("btn-secondary");
+                        } else {
+                            $("#cb-close-" + circuitBreaker.name).removeClass("btn-success").addClass("btn-secondary");
+                            $("#cb-open-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-danger");
+                        }
+
+                        // local remote condition
+                        let cbLocalRemoteValue = circuitBreaker.value_local_remote == 1 ? true : false;
+                        $("#checkbox-local-remote-" + circuitBreaker.name).attr("checked", cbLocalRemoteValue);
                     });
                 }
             });
@@ -145,11 +160,11 @@
                         type: "DELETE",
                         contentType: "application/json",
                         data: JSON.stringify(circuitBreakerModel),
-                        success: function(data) {
+                        success: function (data) {
                             updateCircuitBreakerElements();
                             alert("Circuit breaker deleted successfully!");
                         },
-                        error: function(error) {
+                        error: function (error) {
                             console.error("Error deleting circuit breaker:", error);
                             alert("Error deleting circuit breaker: " + error.responseText);
                         }
@@ -158,7 +173,7 @@
             }
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             updateCircuitBreakerElements();
         });
     </script>
