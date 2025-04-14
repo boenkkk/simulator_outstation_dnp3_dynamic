@@ -99,6 +99,7 @@
                 type: "GET",
                 contentType: "application/json",
                 success: function (data) {
+                    tapChangerElements = data;
                     $("#tapChangerContainer").empty();
                     $.each(data, function (index, tapChanger) {
                         var tapChangerHtml = `
@@ -109,7 +110,7 @@
                                      </div>
                                 </div>
 
-                                <div id="number-display" style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">${tapChanger.value}</div>
+                                <div id="number-display-${tapChanger.name}" style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">${tapChanger.value}</div>
 
                                 <div class="d-flex justify-content-center mb-3">
                                     <div class="control-knob dark mx-2">
@@ -237,6 +238,11 @@
 
         $(document).ready(function () {
             updateTapChangerElements();
+
+            // auto update elements
+            setInterval(function () {
+                updateTapChangerElements();
+            }, 1000);
         });
     </script>
 </div>
