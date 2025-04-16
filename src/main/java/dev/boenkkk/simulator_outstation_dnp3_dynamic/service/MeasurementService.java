@@ -65,10 +65,12 @@ public class MeasurementService {
             .findFirst()
             .orElse(null);
 
-        // set values
-        measurementModel.setValue(databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue()));
-        measurementModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandRaiseLower()));
-        measurementModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual()));
+            if (measurementModel != null) {
+                // set values
+                measurementModel.setValue(databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue()));
+                measurementModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandRaiseLower()));
+                measurementModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual()));
+            }
 
         return measurementModel;
     }
