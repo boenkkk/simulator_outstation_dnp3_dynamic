@@ -185,6 +185,7 @@
                     contentType: "application/json",
                     data: JSON.stringify(measurementModel),
                     success: function () {
+                        $("#" + measurementName).remove();
                         updateMeasurementElements();
                         alert("Measurement deleted successfully!");
                     },
