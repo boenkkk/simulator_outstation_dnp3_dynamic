@@ -14,6 +14,7 @@
                     <input class="form-control" id="fileUpload" type="file">
                     <div class="d-flex justify-content-between align-items-center">
                         <button class="btn btn-primary m-1" onclick="uploadFile()">Upload and Process</button>
+                        <button class="btn btn-primary m-1" onclick="downloadFile()">Download Sample Data</button>
                     </div>
                 </div>
             </div>
@@ -31,6 +32,15 @@
         </div>
 
         <script>
+            function downloadFile() {
+                const link = document.createElement('a');
+                link.href = '/dashboard/download';
+                link.download = 'sample-datas.json';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
             function uploadFile() {
                 const fileUpload = document.getElementById('fileUpload');
                 const file = fileUpload.files[0];
