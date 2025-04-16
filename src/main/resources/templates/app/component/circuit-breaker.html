@@ -197,6 +197,7 @@
                     contentType: "application/json",
                     data: JSON.stringify(circuitBreakerModel),
                     success: function () {
+                        $("#" + circuitBreakerName).remove();
                         updateCircuitBreakerElements();
                         alert("Circuit breaker deleted successfully!");
                     },
