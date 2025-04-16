@@ -1,0 +1,17 @@
+# BUILDER CONTAINER
+FROM maven:3-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY pom.xml .
+# Download dependencies without running tests
+RUN mvn dependency:go-offline -B
+
+# Copy the rest of the project and build the application
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# SERVICE CONTAINER
+FROM eclipse-temurin:21-jre-ubi9-minimal
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 20000 47771
+ENTRYPOINT ["java", "-jar", "app.jar"]
