@@ -104,7 +104,7 @@ public class TapChangerService {
                 Optional<TapChangerModel> matchedModelOpt = dataPoints.stream()
                     .filter(TapChangerModel.class::isInstance)
                     .map(TapChangerModel.class::cast)
-                    .filter(model -> model.getName().equals(PREFIX_NAME + tapChangerModel.getName()))
+                    .filter(model -> model.getName().equals(tapChangerModel.getName()))
                     .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {

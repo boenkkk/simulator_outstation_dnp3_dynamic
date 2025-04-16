@@ -2,10 +2,9 @@
     <div class="p-4 border bg-light text-center">
 
         <h5>Tap Changer</h5>
-        <button class="btn btn-primary m-1" data-target="#addTapChangerModal" data-toggle="modal"
+        <button class="btn btn-primary btn-block m-1" data-target="#addTapChangerModal" data-toggle="modal"
                 th:ref="addButton">Add
         </button>
-        <button class="btn btn-danger m-1" onclick="deleteTapChanger()">Delete</button>
 
         <div id="tapChangerContainer">
         </div>
@@ -103,7 +102,9 @@
                     $("#tapChangerContainer").empty();
                     $.each(data, function (index, tapChanger) {
                         let tapChangerHtml = `
-                             <div class="elements border-top border-bottom">
+                             <div class="elements border-dark border-top border-bottom w-100">
+                                <button class="btn btn-danger w-75 m-1" onclick="deleteTapChanger('${tapChanger.name}')">Delete</button>
+
                                 <div class="row justify-content-center">
                                      <div class="container mt-3">
                                          <pre id="jsonView" style="overflow-x: auto; text-align: left;">${JSON.stringify(tapChanger, null, 2)}</pre>
@@ -212,29 +213,26 @@
             });
         }
 
-        function deleteTapChanger() {
-            let tapChanerName = prompt("Enter the name of the tap changer to delete:");
-            if (tapChanerName) {
-                if (confirm("Are you sure you want to delete tap changer: " + tapChanerName + "?")) {
-                    let tapChangerModel = {
-                        name: tapChanerName
-                    };
+        function deleteTapChanger(tapChangerName) {
+            if (confirm("Are you sure you want to delete tap changer: " + tapChangerName + "?")) {
+                let tapChangerModel = {
+                    name: tapChangerName
+                };
 
-                    $.ajax({
-                        url: "/tap-changer/delete-data",
-                        type: "DELETE",
-                        contentType: "application/json",
-                        data: JSON.stringify(tapChangerModel),
-                        success: function () {
-                            updateTapChangerElements();
-                            alert("Tap Changer deleted successfully!");
-                        },
-                        error: function (error) {
-                            console.error("Error deleting tap changer:", error);
-                            alert("Error deleting tap changer: " + error.responseText);
-                        }
-                    });
-                }
+                $.ajax({
+                    url: "/tap-changer/delete-data",
+                    type: "DELETE",
+                    contentType: "application/json",
+                    data: JSON.stringify(tapChangerModel),
+                    success: function () {
+                        updateTapChangerElements();
+                        alert("Tap Changer deleted successfully!");
+                    },
+                    error: function (error) {
+                        console.error("Error deleting tap changer:", error);
+                        alert("Error deleting tap changer: " + error.responseText);
+                    }
+                });
             }
         }
 
