@@ -25,35 +25,35 @@
                 <div class="modal-body">
                     <form id="addTapChangerForm">
                         <div class="form-group">
-                            <label for="name">Name</label>
+                            <label for="tcName">Name</label>
                             <input class="form-control" id="tcName" required type="text">
                         </div>
                         <div class="form-group">
-                            <label for="indexAiValue">Index Ai Value</label>
+                            <label for="tcIndexAiValue">Index Ai Value</label>
                             <input class="form-control" id="tcIndexAiValue" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="indexBoCommandRaiseLower">Index Bo Command Raise Lower</label>
+                            <label for="tcIndexBoCommandRaiseLower">Index Bo Command Raise Lower</label>
                             <input class="form-control" id="tcIndexBoCommandRaiseLower" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="indexBoCommandAutoManual">Index Bo Command Auto Manual</label>
+                            <label for="tcIndexBoCommandAutoManual">Index Bo Command Auto Manual</label>
                             <input class="form-control" id="tcIndexBoCommandAutoManual" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="indexBoCommandLocalRemote">Index Bo Command Local Remote</label>
+                            <label for="tcIndexBoCommandLocalRemote">Index Bo Command Local Remote</label>
                             <input class="form-control" id="tcIndexBoCommandLocalRemote" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="intervalScheduler">Interval Scheduler</label>
+                            <label for="tcIntervalScheduler">Interval Scheduler</label>
                             <input class="form-control" id="tcIntervalScheduler" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="valueMin">Value Min</label>
+                            <label for="tcValueMin">Value Min</label>
                             <input class="form-control" id="tcValueMin" max="32" min="0" required type="number">
                         </div>
                         <div class="form-group">
-                            <label for="valueMax">Value Max</label>
+                            <label for="tcValueMax">Value Max</label>
                             <input class="form-control" id="tcValueMax" max="32" min="0" required type="number">
                         </div>
                     </form>
@@ -67,10 +67,10 @@
     </div>
 
     <script>
-        var tapChangerElements = [];
+        let tapChangerElements = [];
 
         function submitAddTapChangerForm() {
-            var tapChangerModel = {
+            let tapChangerModel = {
                 name: $("#tcName").val(),
                 index_ai_value: parseInt($("#tcIndexAiValue").val()),
                 index_bo_command_raise_lower: parseInt($("#tcIndexBoCommandRaiseLower").val()),
@@ -86,7 +86,7 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(tapChangerModel),
-                success: function (data) {
+                success: function () {
                     updateTapChangerElements();
                     $('#addTapChangerModal').modal('hide');
                 }
@@ -102,7 +102,7 @@
                     tapChangerElements = data;
                     $("#tapChangerContainer").empty();
                     $.each(data, function (index, tapChanger) {
-                        var tapChangerHtml = `
+                        let tapChangerHtml = `
                              <div class="elements border-top border-bottom">
                                 <div class="row justify-content-center">
                                      <div class="container mt-3">
@@ -149,11 +149,13 @@
                         $("#tapChangerContainer").append(tapChangerHtml);
 
                         // auto manual condition
-                        let tcAutoManualValue = tapChanger.value_auto_manual == 1 ? true : false;
+                        let tcAutoManualValue = tapChanger.value_auto_manual == 1;
+                        // NOTE: DONT change to ===
                         $("#checkbox-auto-manual-" + tapChanger.name).attr("checked", tcAutoManualValue);
 
                         // local remote condition
-                        let tcLocalRemoteValue = tapChanger.value_local_remote == 1 ? true : false;
+                        let tcLocalRemoteValue = tapChanger.value_local_remote == 1;
+                        // NOTE: DONT change to ===
                         $("#checkbox-local-remote-" + tapChanger.name).attr("checked", tcLocalRemoteValue);
                     });
                 }
@@ -161,7 +163,7 @@
         }
 
         function actionRaiseLower(index, value) {
-            var tapChangerModel = {
+            let tapChangerModel = {
                 index_bo_command_raise_lower: index,
                 value_raise_lower: value
             };
@@ -170,15 +172,15 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(tapChangerModel),
-                success: function (data) {
+                success: function () {
                     updateTapChangerElements();
                 }
             });
         }
 
         function actionAutoManual(index, value) {
-            let switchValue = value ? false : true;
-            var tapChangerModel = {
+            let switchValue = !value;
+            let tapChangerModel = {
                 index_bo_command_auto_manual: index,
                 value_auto_manual: switchValue
             };
@@ -187,15 +189,15 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(tapChangerModel),
-                success: function (data) {
+                success: function () {
                     updateTapChangerElements();
                 }
             });
         }
 
         function actionLocalRemote(index, value) {
-            let switchValue = value ? false : true;
-            var tapChangerModel = {
+            let switchValue = !value;
+            let tapChangerModel = {
                 index_bo_command_local_remote: index,
                 value_local_remote: switchValue
             };
@@ -204,17 +206,17 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(tapChangerModel),
-                success: function (data) {
+                success: function () {
                     updateTapChangerElements();
                 }
             });
         }
 
         function deleteTapChanger() {
-            var tapChanerName = prompt("Enter the name of the tap changer to delete:");
+            let tapChanerName = prompt("Enter the name of the tap changer to delete:");
             if (tapChanerName) {
                 if (confirm("Are you sure you want to delete tap changer: " + tapChanerName + "?")) {
-                    var tapChangerModel = {
+                    let tapChangerModel = {
                         name: tapChanerName
                     };
 
@@ -223,7 +225,7 @@
                         type: "DELETE",
                         contentType: "application/json",
                         data: JSON.stringify(tapChangerModel),
-                        success: function (data) {
+                        success: function () {
                             updateTapChangerElements();
                             alert("Tap Changer deleted successfully!");
                         },

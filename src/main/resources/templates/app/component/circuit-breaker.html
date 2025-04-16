@@ -56,10 +56,8 @@
     </div>
 
     <script>
-        var circuitBreakerElements = [];
-
         function submitAddCircuitBreakerForm() {
-            var circuitBreakerModel = {
+            let circuitBreakerModel = {
                 name: $("#cbName").val(),
                 index_dbbi_value: parseInt($("#cbIndexDbbiValue").val()),
                 index_bo_command_open_close: parseInt($("#cbIndexBoCommandOpenClose").val()),
@@ -72,7 +70,7 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(circuitBreakerModel),
-                success: function (data) {
+                success: function () {
                     updateCircuitBreakerElements();
                     $('#addCircuitBreakerModal').modal('hide');
                 }
@@ -87,7 +85,7 @@
                 success: function (data) {
                     $("#circuitBreakerContainer").empty();
                     $.each(data, function (index, circuitBreaker) {
-                        var circuitBreakerHtml = `
+                        let circuitBreakerHtml = `
                              <div class="elements border-top border-bottom">
                                 <div class="row justify-content-center">
                                      <div class="container mt-3">
@@ -126,10 +124,10 @@
                         $("#circuitBreakerContainer").append(circuitBreakerHtml);
 
                         // cb condition
-                        if (circuitBreaker.value == 1) {
+                        if (circuitBreaker.value === 1) {
                             $("#cb-close-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-success");
                             $("#cb-open-" + circuitBreaker.name).removeClass("btn-danger").addClass("btn-secondary");
-                        } else if (circuitBreaker.value == 2) {
+                        } else if (circuitBreaker.value === 2) {
                             $("#cb-close-" + circuitBreaker.name).removeClass("btn-success").addClass("btn-secondary");
                             $("#cb-open-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-danger");
                         } else {
@@ -138,7 +136,8 @@
                         }
 
                         // local remote condition
-                        let cbLocalRemoteValue = circuitBreaker.value_local_remote == 1 ? true : false;
+                        // NOTE: DONT change to ===
+                        let cbLocalRemoteValue = circuitBreaker.value_local_remote == 1;
                         $("#checkbox-local-remote-" + circuitBreaker.name).attr("checked", cbLocalRemoteValue);
                     });
                 }
@@ -146,7 +145,7 @@
         }
 
         function actionOpenClose(index, value) {
-            var circuitBreakerModel = {
+            let circuitBreakerModel = {
                 index_bo_command_open_close: index,
                 value_open_close: value
             };
@@ -155,14 +154,14 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(circuitBreakerModel),
-                success: function (data) {
+                success: function () {
                     updateCircuitBreakerElements();
                 }
             });
         }
 
         function actionInvalid(index, value) {
-            var circuitBreakerModel = {
+            let circuitBreakerModel = {
                 index_bo_command_invalid: index,
                 value_invalid: value
             };
@@ -171,15 +170,15 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(circuitBreakerModel),
-                success: function (data) {
+                success: function () {
                     updateCircuitBreakerElements();
                 }
             });
         }
 
         function actionLocalRemote(index, value) {
-            let switchValue = value ? false : true;
-            var circuitBreakerModel = {
+            let switchValue = !value;
+            let circuitBreakerModel = {
                 index_bo_command_local_remote: index,
                 value_local_remote: switchValue
             };
@@ -188,17 +187,17 @@
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(circuitBreakerModel),
-                success: function (data) {
+                success: function () {
                     updateCircuitBreakerElements();
                 }
             });
         }
 
         function deleteCircuitBreaker() {
-            var circuitBreakerName = prompt("Enter the name of the circuit breaker to delete:");
+            let circuitBreakerName = prompt("Enter the name of the circuit breaker to delete:");
             if (circuitBreakerName) {
                 if (confirm("Are you sure you want to delete circuit breaker: " + circuitBreakerName + "?")) {
-                    var circuitBreakerModel = {
+                    let circuitBreakerModel = {
                         name: circuitBreakerName
                     };
 
@@ -207,7 +206,7 @@
                         type: "DELETE",
                         contentType: "application/json",
                         data: JSON.stringify(circuitBreakerModel),
-                        success: function (data) {
+                        success: function () {
                             updateCircuitBreakerElements();
                             alert("Circuit breaker deleted successfully!");
                         },
