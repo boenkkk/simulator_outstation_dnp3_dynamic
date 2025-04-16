@@ -57,4 +57,22 @@ public class MeasurementController {
 
         return ResponseEntity.ok("delete-data");
     }
+
+    @PostMapping("/action-raise-lower")
+    public ResponseEntity<List<MeasurementModel>> actionRaiseLower(@RequestBody MeasurementModel measurementModel) {
+        log.info("req: {}", measurementModel);
+        measurementService.actionRaiseLower(measurementModel);
+
+        List<MeasurementModel> datas = measurementService.getAll();
+        return ResponseEntity.ok(datas);
+    }
+
+    @PostMapping("/action-auto-manual")
+    public ResponseEntity<List<MeasurementModel>> actionAutoManual(@RequestBody MeasurementModel measurementModel) {
+        log.info("req: {}", measurementModel);
+        measurementService.actionAutoManual(measurementModel);
+
+        List<MeasurementModel> datas = measurementService.getAll();
+        return ResponseEntity.ok(datas);
+    }
 }

@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.joou.UShort;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +24,13 @@ public class MeasurementService {
     private final DatabaseService databaseService;
     private final OutstationsService outstationsService;
     private final SchedulerTask schedulerTask;
+    private final DatapointService datapointService;
 
-    public MeasurementService(DatabaseService databaseService, OutstationsService outstationsService, SchedulerTask schedulerTask
-    ) {
+    public MeasurementService(DatabaseService databaseService, OutstationsService outstationsService, SchedulerTask schedulerTask, DatapointService datapointService) {
         this.databaseService = databaseService;
         this.outstationsService = outstationsService;
         this.schedulerTask = schedulerTask;
+        this.datapointService = datapointService;
     }
 
     public void addData(MeasurementModel measurementModel) {
@@ -114,5 +116,13 @@ public class MeasurementService {
                 });
             }
         });
+    }
+
+    public void actionRaiseLower(MeasurementModel measurementModel) {
+        datapointService.operateBinaryOutput(measurementModel.getValueRaiseLower(), UShort.valueOf(measurementModel.getIndexBoCommandRaiseLower()));
+    }
+
+    public void actionAutoManual(MeasurementModel measurementModel) {
+        datapointService.operateBinaryOutput(measurementModel.getValueAutoManual(), UShort.valueOf(measurementModel.getIndexBoCommandAutoManual()));
     }
 }
