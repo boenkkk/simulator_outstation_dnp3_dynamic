@@ -64,10 +64,9 @@ public class MeasurementService {
             .orElse(null);
 
         // set values
-        Double measurementValue = databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
-        Boolean autoManualValue = databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual());
-        measurementModel.setValue(measurementValue);
-        measurementModel.setValueAutoManual(autoManualValue);
+        measurementModel.setValue(databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue()));
+        measurementModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandRaiseLower()));
+        measurementModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual()));
 
         return measurementModel;
     }
@@ -83,10 +82,9 @@ public class MeasurementService {
 
         // set values
         measurementModels.forEach(measurementModel -> {
-            Double measurementValue = databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
-            Boolean autoManualValue = databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual());
-            measurementModel.setValue(measurementValue);
-            measurementModel.setValueAutoManual(autoManualValue);
+            measurementModel.setValue(databaseService.getAnalogInput(ENDPOINT, measurementModel.getIndexAiValue()));
+            measurementModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandRaiseLower()));
+            measurementModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual()));
         });
 
         return measurementModels;
