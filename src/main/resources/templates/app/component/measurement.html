@@ -94,47 +94,47 @@
                 contentType: "application/json",
                 success: function (data) {
                     measurementElements = data;
-                    $("#measurementContainer").empty();
                     $.each(data, function (index, measurement) {
-                        let measurementHtml = `
-                             <div class="elements border-dark border-top border-bottom w-100">
-                                <button class="btn btn-danger w-75 m-1" onclick="deleteMeasurement('${measurement.name}')">Delete</button>
+                        const existingElement = $("#" + measurement.name);
+                        if (existingElement.length > 0) {
+                            updateMeasurementDynamicElements(measurement)
+                        } else {
+                            let measurementHtml = `
+                                 <div class="elements border-dark border-top border-bottom w-100" id="${measurement.name}">
+                                    <button class="btn btn-danger w-75 m-1" onclick="deleteMeasurement('${measurement.name}')">Delete</button>
 
-                                <div class="row justify-content-center">
-                                     <div class="container mt-3">
-                                         <pre id="jsonView" style="overflow-x: auto; text-align: left;">${JSON.stringify(measurement, null, 2)}</pre>
-                                     </div>
-                                </div>
+                                    <div class="row justify-content-center">
+                                         <div class="container mt-3">
+                                             <pre id="json-view-${measurement.name}" style="overflow-x: auto; text-align: left;">${JSON.stringify(measurement, null, 2)}</pre>
+                                         </div>
+                                    </div>
 
-                                <div id="number-display-${measurement.name}" style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">${measurement.value.toFixed(2)}</div>
+                                    <div id="number-display-${measurement.name}" style="font-size: 36px; font-weight: bold; margin-bottom: 10px;">${measurement.value.toFixed(2)}</div>
 
-                                <div class="d-flex justify-content-center mb-3">
-                                    <div class="control-knob dark mx-2">
-                                        <input id="checkbox-auto-manual-${measurement.name}" type="checkbox" onclick="actionAutoManual(${measurement.index_bo_command_auto_manual}, ${measurement.value_auto_manual})">
-                                        <div class="control-position on">
-                                            <span>AUTO</span>
-                                        </div>
-                                        <div class="control-position off">
-                                            <span>MANUAL</span>
-                                        </div>
-                                        <div class="knob">
-                                            <div class="knob-center"></div>
+                                    <div class="d-flex justify-content-center mb-3">
+                                        <div class="control-knob dark mx-2">
+                                            <input id="checkbox-auto-manual-${measurement.name}" type="checkbox" onclick="actionAutoManual(${measurement.index_bo_command_auto_manual}, ${measurement.value_auto_manual})">
+                                            <div class="control-position on">
+                                                <span>AUTO</span>
+                                            </div>
+                                            <div class="control-position off">
+                                                <span>MANUAL</span>
+                                            </div>
+                                            <div class="knob">
+                                                <div class="knob-center"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div>
-                                    <button class="adjust-button btn btn-success" id="increase-${measurement.name}" onclick="actionRaiseLower(${measurement.index_bo_command_raise_lower}, true)">Raise</button>
-                                    <button class="adjust-button btn btn-danger" id="decrease-${measurement.name}" onclick="actionRaiseLower(${measurement.index_bo_command_raise_lower}, false)">Lower</button>
+                                    <div>
+                                        <button class="adjust-button btn btn-success" id="increase-${measurement.name}" onclick="actionRaiseLower(${measurement.index_bo_command_raise_lower}, true)">Raise</button>
+                                        <button class="adjust-button btn btn-danger" id="decrease-${measurement.name}" onclick="actionRaiseLower(${measurement.index_bo_command_raise_lower}, false)">Lower</button>
+                                    </div>
                                 </div>
-                            </div>
-                         `;
-                        $("#measurementContainer").append(measurementHtml);
-
-                        // auto manual condition
-                        let measAutoManualValue = measurement.value_auto_manual == 1;
-                        // NOTE: DONT change to ===
-                        $("#checkbox-auto-manual-" + measurement.name).attr("checked", measAutoManualValue);
+                             `;
+                            $("#measurementContainer").append(measurementHtml);
+                            updateMeasurementDynamicElements(measurement);
+                        }
                     });
                 }
             });
@@ -194,6 +194,19 @@
                     }
                 });
             }
+        }
+
+        function updateMeasurementDynamicElements(measurement) {
+            // json view
+            $("#json-view-" + measurement.name).text(JSON.stringify(measurement, null, 2));
+
+            // value
+            $("#number-display-" + measurement.name).text(measurement.value.toFixed(2));
+
+            // auto manual condition
+            let measAutoManualValue = measurement.value_auto_manual == 1;
+            // NOTE: DONT change to ===
+            $("#checkbox-auto-manual-" + measurement.name).attr("checked", measAutoManualValue);
         }
 
         $(document).ready(function () {
