@@ -220,6 +220,7 @@
                     contentType: "application/json",
                     data: JSON.stringify(tapChangerModel),
                     success: function () {
+                        $("#" + tapChangerName).remove();
                         updateTapChangerElements();
                         alert("Tap Changer deleted successfully!");
                     },
