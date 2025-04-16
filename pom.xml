@@ -62,12 +62,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.corundumstudio.socketio</groupId>
-            <artifactId>netty-socketio</artifactId>
-            <version>1.7.19</version>
-        </dependency>
-
-        <dependency>
             <groupId>io.stepfunc</groupId>
             <artifactId>dnp3</artifactId>
             <version>1.5.2</version>
