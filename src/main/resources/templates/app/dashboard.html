@@ -8,7 +8,7 @@
                     <input class="form-control" id="fileUpload" type="file">
                     <div class="d-flex justify-content-between align-items-center">
                         <button class="btn btn-primary m-1" onclick="uploadFile()">Upload and Process</button>
-                        <button class="btn btn-primary m-1" onclick="downloadFile()">Download Sample Data</button>
+                        <button class="btn btn-success m-1" onclick="downloadFile()">Download Sample Data</button>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,6 @@
 
                             // Send circuitBreakerDatas
                             if (data.hasOwnProperty('circuit_breaker_datas')) {
-                                console.log('Processing circuit_breaker_datas');
                                 data.circuit_breaker_datas.forEach(model => {
                                     sendData('/circuit-breaker/add-data', model);
                                 });
@@ -56,7 +55,6 @@
 
                             // Send tapChangerDatas
                             if (data.hasOwnProperty('tap_changer_datas')) {
-                                console.log('Processing tap_changer_datas');
                                 data.tap_changer_datas.forEach(model => {
                                     sendData('/tap-changer/add-data', model);
                                 });
@@ -64,7 +62,6 @@
 
                             // Send measurementDatas
                             if (data.hasOwnProperty('measurement_datas')) {
-                                console.log('Processing measurement_datas');
                                 data.measurement_datas.forEach(model => {
                                     sendData('/measurement/add-data', model);
                                 });
@@ -84,25 +81,17 @@
             }
 
             function sendData(url, data) {
-                console.log('Sending data to ' + url + ':', data);
                 $.ajax({
                     url: url,
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(data),
-                    success: function (response) {
+                    success: function () {
                         console.log('Data sent successfully to ' + url);
                     },
                     error: function (error) {
                         console.error('Error sending data to ' + url + ':', error);
                         alert('Error sending data to ' + url + ': ' + error.responseText);
-                    },
-                    complete: function () {
-                        console.log('Request to ' + url + ' completed');
-                        // wait 1 seconds
-                        setTimeout(function () {
-                            console.log('Request to ' + url + ' completed after 1 second delay');
-                        }, 1000);
                     }
                 });
             }
