@@ -97,7 +97,7 @@ public class CircuitBreakerService {
                 Optional<CircuitBreakerModel> matchedModelOpt = dataPoints.stream()
                     .filter(CircuitBreakerModel.class::isInstance)
                     .map(CircuitBreakerModel.class::cast)
-                    .filter(model -> model.getName().equals(PREFIX_NAME + circuitBreakerModel.getName()))
+                    .filter(model -> model.getName().equals(circuitBreakerModel.getName()))
                     .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {

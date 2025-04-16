@@ -2,10 +2,9 @@
     <div class="p-4 border bg-light text-center">
 
         <h5>Circuit Breaker</h5>
-        <button class="btn btn-primary m-1" data-target="#addCircuitBreakerModal" data-toggle="modal"
+        <button class="btn btn-primary btn-block m-1" data-target="#addCircuitBreakerModal" data-toggle="modal"
                 th:ref="addButton">Add
         </button>
-        <button class="btn btn-danger m-1" onclick="deleteCircuitBreaker()">Delete</button>
 
         <div id="circuitBreakerContainer">
         </div>
@@ -86,7 +85,9 @@
                     $("#circuitBreakerContainer").empty();
                     $.each(data, function (index, circuitBreaker) {
                         let circuitBreakerHtml = `
-                             <div class="elements border-top border-bottom">
+                             <div class="elements border-dark border-top border-bottom w-100">
+                                <button class="btn btn-danger w-75 m-1" onclick="deleteCircuitBreaker('${circuitBreaker.name}')">Delete</button>
+
                                 <div class="row justify-content-center">
                                      <div class="container mt-3">
                                          <pre id="jsonView" style="overflow-x: auto; text-align: left;">${JSON.stringify(circuitBreaker, null, 2)}</pre>
@@ -193,29 +194,26 @@
             });
         }
 
-        function deleteCircuitBreaker() {
-            let circuitBreakerName = prompt("Enter the name of the circuit breaker to delete:");
-            if (circuitBreakerName) {
-                if (confirm("Are you sure you want to delete circuit breaker: " + circuitBreakerName + "?")) {
-                    let circuitBreakerModel = {
-                        name: circuitBreakerName
-                    };
+        function deleteCircuitBreaker(circuitBreakerName) {
+            if (confirm("Are you sure you want to delete circuit breaker: " + circuitBreakerName + "?")) {
+                let circuitBreakerModel = {
+                    name: circuitBreakerName
+                };
 
-                    $.ajax({
-                        url: "/circuit-breaker/delete-data",
-                        type: "DELETE",
-                        contentType: "application/json",
-                        data: JSON.stringify(circuitBreakerModel),
-                        success: function () {
-                            updateCircuitBreakerElements();
-                            alert("Circuit breaker deleted successfully!");
-                        },
-                        error: function (error) {
-                            console.error("Error deleting circuit breaker:", error);
-                            alert("Error deleting circuit breaker: " + error.responseText);
-                        }
-                    });
-                }
+                $.ajax({
+                    url: "/circuit-breaker/delete-data",
+                    type: "DELETE",
+                    contentType: "application/json",
+                    data: JSON.stringify(circuitBreakerModel),
+                    success: function () {
+                        updateCircuitBreakerElements();
+                        alert("Circuit breaker deleted successfully!");
+                    },
+                    error: function (error) {
+                        console.error("Error deleting circuit breaker:", error);
+                        alert("Error deleting circuit breaker: " + error.responseText);
+                    }
+                });
             }
         }
 
