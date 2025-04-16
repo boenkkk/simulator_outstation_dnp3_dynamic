@@ -55,6 +55,8 @@
     </div>
 
     <script>
+        let circuitBreakerElements = [];
+
         function submitAddCircuitBreakerForm() {
             let circuitBreakerModel = {
                 name: $("#cbName").val(),
@@ -82,14 +84,14 @@
                 type: "GET",
                 contentType: "application/json",
                 success: function (data) {
-                    $("#circuitBreakerContainer").empty();
+                    circuitBreakerElements = data;
                     $.each(data, function (index, circuitBreaker) {
                         const existingElement = $("#" + circuitBreaker.name);
                         if (existingElement.length > 0) {
                             updateCircuitBreakerDynamicElements(circuitBreaker);
                         } else {
                             let circuitBreakerHtml = `
-                                 <div class="elements border-dark border-top border-bottom w-100">
+                                 <div class="elements border-dark border-top border-bottom w-100" id="${circuitBreaker.name}">
                                     <button class="btn btn-danger w-75 m-1" onclick="deleteCircuitBreaker('${circuitBreaker.name}')">Delete</button>
 
                                     <div class="row justify-content-center">
@@ -207,6 +209,9 @@
         }
 
         function updateCircuitBreakerDynamicElements(circuitBreaker) {
+            // json view
+            $("#json-view-" + circuitBreaker.name).text(JSON.stringify(circuitBreaker, null, 2));
+
             // cb condition
             if (circuitBreaker.value === 1) {
                 $("#cb-close-" + circuitBreaker.name).removeClass("btn-secondary").addClass("btn-success");
