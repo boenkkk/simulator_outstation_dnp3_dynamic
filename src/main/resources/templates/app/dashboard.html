@@ -9,6 +9,18 @@
     <div class="main-content">
         <div class="container-fluid">
             <div class="row no-gutters">
+                <div class="form-group">
+                    <label for="fileUpload">Upload File</label>
+                    <input class="form-control" id="fileUpload" type="file">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <button class="btn btn-primary m-1" onclick="uploadFile()">Upload and Process</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row no-gutters">
                 <!-- Column 1 -->
                 <div th:replace="app/component/circuit-breaker :: circuit-breaker"></div>
                 <!-- Column 2 -->
@@ -17,5 +29,79 @@
                 <div th:replace="app/component/measurement :: measurement"></div>
             </div>
         </div>
+
+        <script>
+            function uploadFile() {
+                const fileUpload = document.getElementById('fileUpload');
+                const file = fileUpload.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        try {
+                            const data = JSON.parse(event.target.result);
+
+                            // Send circuitBreakerDatas
+                            if (data.hasOwnProperty('circuit_breaker_datas')) {
+                                console.log('Processing circuit_breaker_datas');
+                                data.circuit_breaker_datas.forEach(model => {
+                                    sendData('/circuit-breaker/add-data', model);
+                                });
+                            }
+
+                            // Send tapChangerDatas
+                            if (data.hasOwnProperty('tap_changer_datas')) {
+                                console.log('Processing tap_changer_datas');
+                                data.tap_changer_datas.forEach(model => {
+                                    sendData('/tap-changer/add-data', model);
+                                });
+                            }
+
+                            // Send measurementDatas
+                            if (data.hasOwnProperty('measurement_datas')) {
+                                console.log('Processing measurement_datas');
+                                data.measurement_datas.forEach(model => {
+                                    sendData('/measurement/add-data', model);
+                                });
+                            }
+
+                            alert('File uploaded and processed successfully!');
+
+                        } catch (error) {
+                            alert('Error parsing JSON file: ' + error);
+                        }
+                    };
+
+                    reader.readAsText(file);
+                } else {
+                    alert('Please select a file to upload.');
+                }
+            }
+
+            function sendData(url, data) {
+                console.log('Sending data to ' + url + ':', data);
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Data sent successfully to ' + url);
+                    },
+                    error: function (error) {
+                        console.error('Error sending data to ' + url + ':', error);
+                        alert('Error sending data to ' + url + ': ' + error.responseText);
+                    },
+                    complete: function () {
+                        console.log('Request to ' + url + ' completed');
+                        // wait 1 seconds
+                        setTimeout(function () {
+                            console.log('Request to ' + url + ' completed after 1 second delay');
+                        }, 1000);
+                    }
+                });
+            }
+        </script>
     </div>
 </div>
