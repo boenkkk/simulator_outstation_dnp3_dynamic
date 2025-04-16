@@ -2,9 +2,7 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.controller;
 
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.CircuitBreakerModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.service.CircuitBreakerService;
-
-import java.util.List;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @RestController
 @RequestMapping("/circuit-breaker")
@@ -45,6 +43,9 @@ public class CircuitBreakerController {
     @PostMapping("/add-data")
     public ResponseEntity<List<CircuitBreakerModel>> addData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
         log.info("req: {}", circuitBreakerModel);
+        if (circuitBreakerService.getData(circuitBreakerModel.getName()) != null) {
+            return ResponseEntity.badRequest().body(null);
+        }
         circuitBreakerService.addData(circuitBreakerModel);
 
         List<CircuitBreakerModel> datas = circuitBreakerService.getAll();
