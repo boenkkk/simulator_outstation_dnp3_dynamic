@@ -66,11 +66,13 @@ public class TapChangerService {
             .findFirst()
             .orElse(null);
 
-        // set values
-        tapChangerModel.setValue(databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue()).intValue());
-        tapChangerModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandRaiseLower()));
-        tapChangerModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
-        tapChangerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+        if (tapChangerModel != null) {
+            // set values
+            tapChangerModel.setValue(databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue()).intValue());
+            tapChangerModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandRaiseLower()));
+            tapChangerModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
+            tapChangerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+        }
 
         return tapChangerModel;
     }
