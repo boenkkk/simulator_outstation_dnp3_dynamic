@@ -1,9 +1,8 @@
 package dev.boenkkk.simulator_outstation_dnp3_dynamic.controller;
 
-import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.CircuitBreakerModel;
-import dev.boenkkk.simulator_outstation_dnp3_dynamic.service.CircuitBreakerService;
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.OutstationBean;
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.service.OutstationsService;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -26,20 +25,29 @@ import java.util.List;
 @Slf4j
 public class DashboardController {
 
-    private final CircuitBreakerService circuitBreakerService;
+    private static final String ENDPOINT = "0.0.0.0";
 
-    public DashboardController(CircuitBreakerService circuitBreakerService) {
-        this.circuitBreakerService = circuitBreakerService;
+    private final OutstationsService outstationsService;
+
+    public DashboardController(OutstationsService outstationsService) {
+        this.outstationsService = outstationsService;
     }
 
     @GetMapping({"", "/dashboard"})
-    public ModelAndView index(ModelMap modelMap) {
-        List<CircuitBreakerModel> circuitBreakerList = circuitBreakerService.getAll();
-        modelMap.addAttribute("circuitBreakerList", circuitBreakerList);
-        return new ModelAndView("app/dashboard", modelMap);
+    public ModelAndView index() {
+        return new ModelAndView("app/dashboard");
     }
 
-     @GetMapping("/dashboard/download")
+    @GetMapping("/dashboard/get-bean-data")
+    public ResponseEntity<List<Object>> getBeanData() {
+        List<Object> objectList = outstationsService.getOutstationData(ENDPOINT)
+                .map(OutstationBean.OutstationData::getListDataPoints)
+                .orElse(Collections.emptyList());
+
+        return ResponseEntity.ok(objectList);
+    }
+
+    @GetMapping("/dashboard/download")
     public ResponseEntity<Object> downloadFile() {
         String filename = "sample-datas.json";
         ClassPathResource resource = new ClassPathResource(filename);
