@@ -2,10 +2,9 @@
     <div class="p-4 border bg-light text-center">
 
         <h5>Measurement</h5>
-        <button class="btn btn-primary m-1" data-target="#addMeasurementModal" data-toggle="modal"
+        <button class="btn btn-primary btn-block m-1" data-target="#addMeasurementModal" data-toggle="modal"
                 th:ref="addButton">Add
         </button>
-        <button class="btn btn-danger m-1" onclick="deleteMeasurement()">Delete</button>
 
         <div id="measurementContainer">
         </div>
@@ -98,7 +97,9 @@
                     $("#measurementContainer").empty();
                     $.each(data, function (index, measurement) {
                         let measurementHtml = `
-                             <div class="elements border-top border-bottom">
+                             <div class="elements border-dark border-top border-bottom w-100">
+                                <button class="btn btn-danger w-75 m-1" onclick="deleteMeasurement('${measurement.name}')">Delete</button>
+
                                 <div class="row justify-content-center">
                                      <div class="container mt-3">
                                          <pre id="jsonView" style="overflow-x: auto; text-align: left;">${JSON.stringify(measurement, null, 2)}</pre>
@@ -172,29 +173,26 @@
             });
         }
 
-        function deleteMeasurement() {
-            let tapChanerName = prompt("Enter the name of the measurement to delete:");
-            if (tapChanerName) {
-                if (confirm("Are you sure you want to delete measurement: " + tapChanerName + "?")) {
-                    let measurementModel = {
-                        name: tapChanerName
-                    };
+        function deleteMeasurement(measurementName) {
+            if (confirm("Are you sure you want to delete measurement: " + measurementName + "?")) {
+                let measurementModel = {
+                    name: measurementName
+                };
 
-                    $.ajax({
-                        url: "/measurement/delete-data",
-                        type: "DELETE",
-                        contentType: "application/json",
-                        data: JSON.stringify(measurementModel),
-                        success: function () {
-                            updateMeasurementElements();
-                            alert("Tap Changer deleted successfully!");
-                        },
-                        error: function (error) {
-                            console.error("Error deleting measurement:", error);
-                            alert("Error deleting measurement: " + error.responseText);
-                        }
-                    });
-                }
+                $.ajax({
+                    url: "/measurement/delete-data",
+                    type: "DELETE",
+                    contentType: "application/json",
+                    data: JSON.stringify(measurementModel),
+                    success: function () {
+                        updateMeasurementElements();
+                        alert("Measurement deleted successfully!");
+                    },
+                    error: function (error) {
+                        console.error("Error deleting measurement:", error);
+                        alert("Error deleting measurement: " + error.responseText);
+                    }
+                });
             }
         }
 

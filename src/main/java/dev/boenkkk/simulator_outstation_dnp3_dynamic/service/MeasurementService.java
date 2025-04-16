@@ -101,7 +101,7 @@ public class MeasurementService {
                 Optional<MeasurementModel> matchedModelOpt = dataPoints.stream()
                     .filter(MeasurementModel.class::isInstance)
                     .map(MeasurementModel.class::cast)
-                    .filter(model -> model.getName().equals(PREFIX_NAME + measurementModel.getName()))
+                    .filter(model -> model.getName().equals(measurementModel.getName()))
                     .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
