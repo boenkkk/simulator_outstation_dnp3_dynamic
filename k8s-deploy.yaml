@@ -17,7 +17,7 @@ spec:
                 -   name: harbor-secret
             containers:
                 -   name: simulator-outstation-dnp3-dynamic
-                    image: 1.2.3.4/scada/simulator-outstation-dnp3-dynamic
+                    image: 1.2.3.4/scada/simulator-outstation-dnp3-dynamic:latest
                     ports:
                         -   containerPort: 20000
                         -   containerPort: 47771
