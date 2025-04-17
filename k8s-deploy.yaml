@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: simulator-outstation-dnp3-dynamic
-    namespace: scada-grita
+    namespace: fep-dnp3
 spec:
     replicas: 3
     selector:
@@ -27,7 +27,7 @@ apiVersion: v1
 kind: Service
 metadata:
     name: simulator-outstation-dnp3-dynamic-service
-    namespace: scada-grita
+    namespace: fep-dnp3
 spec:
     selector:
         app: simulator-outstation-dnp3-dynamic
