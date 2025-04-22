@@ -21,6 +21,9 @@ spec:
                     ports:
                         -   containerPort: 20000
                         -   containerPort: 47771
+                    env:
+                        -   name: TZ
+                            value: Asia/Jakarta
 
 ---
 apiVersion: v1
