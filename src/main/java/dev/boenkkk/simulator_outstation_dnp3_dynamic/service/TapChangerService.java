@@ -32,27 +32,31 @@ public class TapChangerService {
     }
 
     public void addData(TapChangerModel tapChangeModel) {
-        databaseService.addAnalogInput(ENDPOINT, tapChangeModel.getIndexAiValue());
-        databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandRaiseLower());
-        databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandAutoManual());
-        databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandLocalRemote());
+        if (getData(tapChangeModel.getName()) == null) {
+            // Store model in outstation data
+            outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
+                synchronized (outstationData) {
+                    // add dnp3 data
+                    databaseService.addAnalogInput(ENDPOINT, tapChangeModel.getIndexAiValue());
+                    databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandRaiseLower());
+                    databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandAutoManual());
+                    databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandLocalRemote());
 
-        // Store model in outstation data
-        outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
-            synchronized (outstationData) {
-                List<Object> dataPoints = Optional
-                        .ofNullable(outstationData.getListDataPoints())
-                        .orElseGet(ArrayList::new);
-                String cbNewName = PREFIX_NAME + tapChangeModel.getName();
-                tapChangeModel.setName(cbNewName);
-                dataPoints.add(tapChangeModel);
+                    // add bean data
+                    List<Object> dataPoints = Optional
+                            .ofNullable(outstationData.getListDataPoints())
+                            .orElseGet(ArrayList::new);
+                    String cbNewName = PREFIX_NAME + tapChangeModel.getName();
+                    tapChangeModel.setName(cbNewName);
+                    dataPoints.add(tapChangeModel);
 
-                outstationData.setListDataPoints(dataPoints);
-            }
-        });
+                    outstationData.setListDataPoints(dataPoints);
+                }
+            });
 
-        // scheduler add
-        schedulerTask.toggleScheduler(tapChangeModel.getName(), true, tapChangeModel.getIntervalScheduler(), tapChangeModel.getIndexAiValue(), tapChangeModel.getValueMin(), tapChangeModel.getValueMax());
+            // add scheduler
+            schedulerTask.toggleScheduler(tapChangeModel.getName(), true, tapChangeModel.getIntervalScheduler(), tapChangeModel.getIndexAiValue(), tapChangeModel.getValueMin(), tapChangeModel.getValueMax());
+        }
     }
 
     public TapChangerModel getData(String name) {
@@ -110,15 +114,18 @@ public class TapChangerService {
                         .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
-                    // Remove from original list (important!)
-                    dataPoints.remove(matchedModel);
-                    log.info("Removed model: {}", matchedModel);
-
-                    // Remove from DNP3 database
+                    // remove dnp3 data
                     databaseService.deleteAnalogInput(ENDPOINT, matchedModel.getIndexAiValue());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandRaiseLower());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandAutoManual());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandLocalRemote());
+
+                    // disable scheduler
+                    schedulerTask.toggleScheduler(tapChangerModel.getName(), false, tapChangerModel.getIntervalScheduler(), tapChangerModel.getIndexAiValue(), tapChangerModel.getValueMin(), tapChangerModel.getValueMax());
+
+                    // remove bean data
+                    dataPoints.remove(matchedModel);
+                    log.info("Removed model: {}", matchedModel);
                 });
             }
         });

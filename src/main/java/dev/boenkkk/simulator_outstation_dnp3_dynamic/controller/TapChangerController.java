@@ -45,9 +45,6 @@ public class TapChangerController {
     @PostMapping("/add-data")
     public ResponseEntity<String> addData(@RequestBody TapChangerModel tapChangerModel) {
         log.info("req: {}", tapChangerModel);
-        if (tapChangerService.getData(tapChangerModel.getName()) != null) {
-            return ResponseEntity.badRequest().body(null);
-        }
         tapChangerService.addData(tapChangerModel);
 
         return ResponseEntity.ok("add-data");
