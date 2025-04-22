@@ -43,9 +43,6 @@ public class CircuitBreakerController {
     @PostMapping("/add-data")
     public ResponseEntity<List<CircuitBreakerModel>> addData(@RequestBody CircuitBreakerModel circuitBreakerModel) {
         log.info("req: {}", circuitBreakerModel);
-        if (circuitBreakerService.getData(circuitBreakerModel.getName()) != null) {
-            return ResponseEntity.badRequest().body(null);
-        }
         circuitBreakerService.addData(circuitBreakerModel);
 
         List<CircuitBreakerModel> datas = circuitBreakerService.getAll();

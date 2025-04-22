@@ -29,24 +29,28 @@ public class CircuitBreakerService {
     }
 
     public void addData(CircuitBreakerModel circuitBreakerModel) {
-        databaseService.addDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue()); // cb value
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandOpenClose()); // command open/close
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandInvalid()); // command invalid
-        databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote()); // command local/remote
+        if (getData(circuitBreakerModel.getName()) == null) {
+            // Store model in outstation data
+            outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
+                synchronized (outstationData) {
+                    // add dnp3 data
+                    databaseService.addDoubleBitBinaryInput(ENDPOINT, circuitBreakerModel.getIndexDbbiValue());
+                    databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandOpenClose());
+                    databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandInvalid());
+                    databaseService.addBinaryOutput(ENDPOINT, circuitBreakerModel.getIndexBoCommandLocalRemote());
 
-        // Store model in outstation data
-        outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
-            synchronized (outstationData) {
-                List<Object> dataPoints = Optional
-                        .ofNullable(outstationData.getListDataPoints())
-                        .orElseGet(ArrayList::new);
-                String cbNewName = PREFIX_NAME + circuitBreakerModel.getName();
-                circuitBreakerModel.setName(cbNewName);
-                dataPoints.add(circuitBreakerModel);
+                    // add bean data
+                    List<Object> dataPoints = Optional
+                            .ofNullable(outstationData.getListDataPoints())
+                            .orElseGet(ArrayList::new);
+                    String cbNewName = PREFIX_NAME + circuitBreakerModel.getName();
+                    circuitBreakerModel.setName(cbNewName);
+                    dataPoints.add(circuitBreakerModel);
 
-                outstationData.setListDataPoints(dataPoints);
-            }
-        });
+                    outstationData.setListDataPoints(dataPoints);
+                }
+            });
+        }
     }
 
     public CircuitBreakerModel getData(String name) {
@@ -103,15 +107,15 @@ public class CircuitBreakerService {
                         .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
-                    // Remove from original list (important!)
-                    dataPoints.remove(matchedModel);
-                    log.info("Removed model: {}", matchedModel);
-
-                    // Remove from DNP3 database
+                    // remove dnp3 data
                     databaseService.deleteDoubleBitBinaryInput(ENDPOINT, matchedModel.getIndexDbbiValue());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandOpenClose());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandInvalid());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandLocalRemote());
+
+                    // remove bean data
+                    dataPoints.remove(matchedModel);
+                    log.info("Removed model: {}", matchedModel);
                 });
             }
         });
