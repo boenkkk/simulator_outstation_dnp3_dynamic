@@ -32,26 +32,30 @@ public class MeasurementService {
     }
 
     public void addData(MeasurementModel measurementModel) {
-        databaseService.addAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
-        databaseService.addBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandRaiseLower());
-        databaseService.addBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual());
+        if (getData(measurementModel.getName()) == null) {
+            // Store model in outstation data
+            outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
+                synchronized (outstationData) {
+                    // add dnp3 data
+                    databaseService.addAnalogInput(ENDPOINT, measurementModel.getIndexAiValue());
+                    databaseService.addBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandRaiseLower());
+                    databaseService.addBinaryOutput(ENDPOINT, measurementModel.getIndexBoCommandAutoManual());
 
-        // Store model in outstation data
-        outstationsService.getOutstationData(ENDPOINT).ifPresent(outstationData -> {
-            synchronized (outstationData) {
-                List<Object> dataPoints = Optional
-                        .ofNullable(outstationData.getListDataPoints())
-                        .orElseGet(ArrayList::new);
-                String cbNewName = PREFIX_NAME + measurementModel.getName();
-                measurementModel.setName(cbNewName);
-                dataPoints.add(measurementModel);
+                    // add bean data
+                    List<Object> dataPoints = Optional
+                            .ofNullable(outstationData.getListDataPoints())
+                            .orElseGet(ArrayList::new);
+                    String cbNewName = PREFIX_NAME + measurementModel.getName();
+                    measurementModel.setName(cbNewName);
+                    dataPoints.add(measurementModel);
 
-                outstationData.setListDataPoints(dataPoints);
-            }
-        });
+                    outstationData.setListDataPoints(dataPoints);
+                }
+            });
 
-        // scheduler add
-        schedulerTask.toggleScheduler(measurementModel.getName(), true, measurementModel.getIntervalScheduler(), measurementModel.getIndexAiValue(), measurementModel.getValueMin(), measurementModel.getValueMax());
+            // add scheduler
+            schedulerTask.toggleScheduler(measurementModel.getName(), true, measurementModel.getIntervalScheduler(), measurementModel.getIndexAiValue(), measurementModel.getValueMin(), measurementModel.getValueMax());
+        }
     }
 
     public MeasurementModel getData(String name) {
@@ -107,14 +111,17 @@ public class MeasurementService {
                         .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
-                    // Remove from original list (important!)
-                    dataPoints.remove(matchedModel);
-                    log.info("Removed model: {}", matchedModel);
-
-                    // Remove from DNP3 database
+                    // remove dnp3 data
                     databaseService.deleteAnalogInput(ENDPOINT, matchedModel.getIndexAiValue());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandRaiseLower());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandAutoManual());
+
+                    // disable scheduler
+                    schedulerTask.toggleScheduler(measurementModel.getName(), true, measurementModel.getIntervalScheduler(), measurementModel.getIndexAiValue(), measurementModel.getValueMin(), measurementModel.getValueMax());
+
+                    // remove bean data
+                    dataPoints.remove(matchedModel);
+                    log.info("Removed model: {}", matchedModel);
                 });
             }
         });

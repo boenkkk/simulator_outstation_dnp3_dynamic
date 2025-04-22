@@ -45,9 +45,6 @@ public class MeasurementController {
     @PostMapping("/add-data")
     public ResponseEntity<String> addData(@RequestBody MeasurementModel measurementModel) {
         log.info("req: {}", measurementModel);
-        if (measurementService.getData(measurementModel.getName()) != null) {
-            return ResponseEntity.badRequest().body(null);
-        }
         measurementService.addData(measurementModel);
 
         return ResponseEntity.ok("add-data");
