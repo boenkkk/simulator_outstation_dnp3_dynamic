@@ -66,6 +66,13 @@
                                 });
                             }
 
+                            // Send teleSignalDatas
+                            if (data.hasOwnProperty('tele_signal_datas')) {
+                                data.tele_signal_datas.forEach(model => {
+                                    sendData('/tele-signal/add-data', model);
+                                });
+                            }
+
                             // Send measurementDatas
                             if (data.hasOwnProperty('measurement_datas')) {
                                 data.measurement_datas.forEach(model => {

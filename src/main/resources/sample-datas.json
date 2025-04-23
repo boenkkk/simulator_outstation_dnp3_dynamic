@@ -7,6 +7,10 @@
         {"name": "A", "index_ai_value": 11, "index_bo_command_raise_lower": 11, "index_bo_command_auto_manual": 12, "index_bo_command_local_remote": 13, "interval_scheduler": 1, "value_min": 0, "value_max": 16},
         {"name": "B", "index_ai_value": 12, "index_bo_command_raise_lower": 14, "index_bo_command_auto_manual": 15, "index_bo_command_local_remote": 16, "interval_scheduler": 1, "value_min": 17, "value_max": 32}
     ],
+    "tele_signal_datas": [
+        {"name": "A", "index_bi_value": 70, "index_bo_command_open_close": 70},
+        {"name": "A", "index_bi_value": 70, "index_bo_command_open_close": 70}
+    ],
     "measurement_datas": [
         {"name": "A", "index_ai_value": 101, "index_bo_command_raise_lower": 101, "index_bo_command_auto_manual": 102, "interval_scheduler": 1, "value_min": 10.1, "value_max": 100.1},
         {"name": "b", "index_ai_value": 102, "index_bo_command_raise_lower": 103, "index_bo_command_auto_manual": 104, "interval_scheduler": 1, "value_min": 100.1, "value_max": 200.1}
