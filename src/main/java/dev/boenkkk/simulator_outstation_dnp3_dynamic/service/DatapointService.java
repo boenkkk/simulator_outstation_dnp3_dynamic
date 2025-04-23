@@ -3,6 +3,7 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.CircuitBreakerModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.MeasurementModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.TapChangerModel;
+import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.TeleSignalModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.scheduler.SchedulerTask;
 
 import java.lang.reflect.Field;
@@ -180,6 +181,20 @@ public class DatapointService {
                                             log.warn("Unhandled key for MEAS_: {}", key);
                                             commandStatus.set(CommandStatus.UNKNOWN);
                                         }
+                                    }
+                                } else if (matchingName.startsWith("TS_")) {
+                                    TeleSignalModel teleSignalModel = (TeleSignalModel) obj;
+
+                                    if (key.equals("indexBoCommandOpenClose")) {
+                                        log.info("Action: OPEN/CLOSE command for TS_");
+
+                                        databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                        databaseService.updateValueBinaryInput(ENDPOINT, teleSignalModel.getIndexBiValue(), valueOpType);
+
+                                        commandStatus.set(CommandStatus.SUCCESS);
+                                    } else {
+                                        log.warn("Unhandled key for CB_: {}", key);
+                                        commandStatus.set(CommandStatus.UNKNOWN);
                                     }
                                 } else {
                                     log.warn("No matching prefix found for name: {}", matchingName);
