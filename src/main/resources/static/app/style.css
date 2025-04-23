@@ -1,6 +1,10 @@
 body {
     font-family: Arial, sans-serif;
+    transform: scale(0.9);
+    transform-origin: top left;
+    width: 111.1111%;
 }
+
 .sidebar {
     height: 100vh;
     background-color: #343a40;
@@ -9,24 +13,30 @@ body {
     width: 250px;
     overflow-y: auto;
 }
+
 .sidebar a {
     color: #fff;
     text-decoration: none;
 }
+
 .sidebar a:hover {
     background-color: #495057;
 }
+
 .sidebar .nav-item .nav-link {
     padding: 0.75rem 1.25rem;
 }
+
 .main-content {
     /* margin-left: 250px; */
     padding: 20px;
 }
+
 .row {
     margin-right: -10px;
     margin-left: -10px;
 }
+
 .btn-circle.btn-success {
     border-color: transparent;
 }
@@ -34,21 +44,25 @@ body {
 .btn-circle.btn-success:hover {
     border-color: transparent;
 }
-.custom-button{
+
+.custom-button {
     margin-right: 20px;
     margin-left: 20px;
     width: 150px;
     height: 70px;
 }
-.fixed-wh-5em{
+
+.fixed-wh-5em {
     width: 5em;
     height: 5em;
 }
+
 .cursor-disabled {
     pointer-events: none;
     cursor: not-allowed;
 }
-.number-display{
+
+.number-display {
     font-size: 36px;
     font-weight: bold;
     display: flex;
@@ -56,6 +70,7 @@ body {
     justify-content: center;
     text-align: center;
 }
+
 .small-btn {
     width: 4em;
     height: 4em;
