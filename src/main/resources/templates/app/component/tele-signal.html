@@ -7,4 +7,173 @@
 
     <div id="teleSignalContainer"></div>
 
+    <!-- Modal Add -->
+    <div aria-hidden="true" aria-labelledby="addTeleSignalModalLabel" class="modal fade" id="addTeleSignalModal"
+         role="dialog" tabindex="-1">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTeleSignalModalLabel">Add Tele Signal</h5>
+                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addTeleSignalForm">
+                        <div class="form-group">
+                            <label for="tsName">Name</label>
+                            <input class="form-control" id="tsName" required type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="tsIndexBiValue">Index Bi Value</label>
+                            <input class="form-control" id="tsIndexBiValue" min="0" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="tsIndexBoCommandOpenClose">Index Bo Command Open Close</label>
+                            <input class="form-control" id="tsIndexBoCommandOpenClose" min="0" required type="number">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" onclick="submitAddTeleSignalForm()" type="button">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let teleSignalElements = [];
+
+        function submitAddTeleSignalForm() {
+            let teleSignalModel = {
+                name: $("#tsName").val(),
+                index_bi_value: parseInt($("#tsIndexBiValue").val()),
+                index_bo_command_open_close: parseInt($("#tsIndexBoCommandOpenClose").val())
+            };
+
+            $.ajax({
+                url: "/tele-signal/add-data",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(teleSignalModel),
+                success: function () {
+                    updateTeleSignalElements();
+                    $('#addTeleSignalModal').modal('hide');
+                }
+            });
+        }
+
+        function updateTeleSignalElements() {
+            $.ajax({
+                url: "/tele-signal/get-all",
+                type: "GET",
+                contentType: "application/json",
+                success: function (data) {
+                    teleSignalElements = data;
+                    $.each(data, function (index, teleSignal) {
+                        const existingElement = $("#" + teleSignal.name);
+                        if (existingElement.length > 0) {
+                            updateTeleSignalDynamicElements(teleSignal);
+                        } else {
+                            let teleSignalHtml = `
+                                 <div class="elements border-dark border-top border-bottom w-100" id="${teleSignal.name}">
+                                    <button class="btn btn-danger w-75 m-1" onclick="deleteTeleSignal('${teleSignal.name}')">Delete</button>
+
+                                    <div class="row justify-content-center">
+                                         <div class="container mt-3">
+                                             <pre id="json-view-${teleSignal.name}" style="overflow-x: auto; text-align: left;">${JSON.stringify(teleSignal, null, 2)}</pre>
+                                         </div>
+                                     </div>
+
+                                     <div class="row justify-content-center mb-3">
+                                        <button id="ts-close-${teleSignal.name}" class="custom-button btn btn-success cursor-disabled">CLOSE</button>
+                                        <button id="ts-open-${teleSignal.name}" class="custom-button btn btn-secondary cursor-disabled">OPEN</button>
+                                     </div>
+
+                                     <div class="row justify-content-center">
+                                         <button class="btn btn-success rounded-circle fixed-wh-5em" onclick="actionOpenClose(${teleSignal.index_bo_command_open_close}, false)">Close</button>
+                                         <button class="btn btn-danger rounded-circle fixed-wh-5em" onclick="actionOpenClose(${teleSignal.index_bo_command_open_close}, true)">Open</button>
+                                     </div>
+                                 </div>
+                             `;
+                            $("#teleSignalContainer").append(teleSignalHtml);
+                            updateTeleSignalDynamicElements(teleSignal);
+                        }
+                    });
+                }
+            });
+        }
+
+        function actionOpenClose(index, value) {
+            let teleSignalModel = {
+                index_bo_command_open_close: index,
+                value_open_close: value
+            };
+            $.ajax({
+                url: "/tele-signal/action-open-close",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(teleSignalModel),
+                success: function () {
+                    updateTeleSignalElements();
+                }
+            });
+        }
+
+        function deleteTeleSignal(teleSignalName) {
+            if (confirm("Are you sure you want to delete tele signal: " + teleSignalName + "?")) {
+                let teleSignalModel = {
+                    name: teleSignalName
+                };
+
+                $.ajax({
+                    url: "/tele-signal/delete-data",
+                    type: "DELETE",
+                    contentType: "application/json",
+                    data: JSON.stringify(teleSignalModel),
+                    success: function () {
+                        $("#" + teleSignalName).remove();
+                        updateTeleSignalElements();
+                        alert("Tele signal deleted successfully!");
+                    },
+                    error: function (error) {
+                        console.error("Error deleting tele signal:", error);
+                        alert("Error deleting tele signal: " + error.responseText);
+                    }
+                });
+            }
+        }
+
+        function updateTeleSignalDynamicElements(teleSignal) {
+            // json view
+            $("#json-view-" + teleSignal.name).text(JSON.stringify(teleSignal, null, 2));
+
+            // ts condition
+            if (teleSignal.value === 1) {
+                $("#ts-close-" + teleSignal.name).removeClass("btn-secondary").addClass("btn-success");
+                $("#ts-open-" + teleSignal.name).removeClass("btn-danger").addClass("btn-secondary");
+            } else if (teleSignal.value === 2) {
+                $("#ts-close-" + teleSignal.name).removeClass("btn-success").addClass("btn-secondary");
+                $("#ts-open-" + teleSignal.name).removeClass("btn-secondary").addClass("btn-danger");
+            } else {
+                $("#ts-close-" + teleSignal.name).removeClass("btn-secondary").addClass("btn-success");
+                $("#ts-open-" + teleSignal.name).removeClass("btn-secondary").addClass("btn-danger");
+            }
+
+            // local remote condition
+            // NOTE: DONT change to ===
+            let tsLocalRemoteValue = teleSignal.value_local_remote == 1;
+            $("#checkbox-local-remote-" + teleSignal.name).attr("checked", tsLocalRemoteValue);
+        }
+
+        $(document).ready(function () {
+            updateTeleSignalElements();
+
+            // auto update elements
+            setInterval(function () {
+                updateTeleSignalElements();
+            }, 1000);
+        });
+    </script>
 </div>
