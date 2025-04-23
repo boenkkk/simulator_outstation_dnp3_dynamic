@@ -1,8 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    transform: scale(0.9);
-    transform-origin: top left;
-    width: 111.1111%;
+    /* transform: scale(0.9); */
+    /* transform-origin: top left; */
+    /* width: 111.1111%; */
 }
 
 .sidebar {
@@ -46,9 +46,9 @@ body {
 }
 
 .custom-button {
-    margin-right: 20px;
-    margin-left: 20px;
-    width: 150px;
+    margin-right: 2px;
+    margin-left: 2px;
+    width: 140px;
     height: 70px;
 }
 
