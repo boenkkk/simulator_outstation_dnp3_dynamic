@@ -1,15 +1,11 @@
-<div class="col-md-4" th:fragment="circuit-breaker">
-    <div class="p-4 border bg-light text-center">
+<div th:fragment="circuit-breaker">
 
-        <h5>Circuit Breaker</h5>
-        <button class="btn btn-primary btn-block m-1" data-target="#addCircuitBreakerModal" data-toggle="modal"
-                th:ref="addButton">Add
-        </button>
+    <h5>Circuit Breaker</h5>
+    <button class="btn btn-primary btn-block m-1" data-target="#addCircuitBreakerModal" data-toggle="modal"
+            th:ref="addButton">Add
+    </button>
 
-        <div id="circuitBreakerContainer">
-        </div>
-
-    </div>
+    <div id="circuitBreakerContainer"></div>
 
     <!-- Modal Add -->
     <div aria-hidden="true" aria-labelledby="addCircuitBreakerModalLabel" class="modal fade" id="addCircuitBreakerModal"

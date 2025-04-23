@@ -16,12 +16,18 @@
 
         <div class="container-fluid">
             <div class="row no-gutters">
-                <!-- Column 1 -->
-                <div th:replace="app/component/circuit-breaker :: circuit-breaker"></div>
-                <!-- Column 2 -->
-                <div th:replace="app/component/tap-changer :: tap-changer"></div>
-                <!-- Column 3 -->
-                <div th:replace="app/component/measurement :: measurement"></div>
+                <div class="col-md-3 p-3 border text-center">
+                    <div th:replace="app/component/circuit-breaker :: circuit-breaker"></div>
+                </div>
+                <div class="col-md-3 p-3 border text-center">
+                    <div th:replace="app/component/tap-changer :: tap-changer"></div>
+                </div>
+                <div class="col-md-3 p-3 border text-center">
+                    <div th:replace="app/component/tele-signal :: tele-signal"></div>
+                </div>
+                <div class="col-md-3 p-3 border text-center">
+                    <div th:replace="app/component/measurement :: measurement"></div>
+                </div>
             </div>
         </div>
 

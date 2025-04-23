@@ -1,14 +1,11 @@
-<div class="col-md-4" th:fragment="tap-changer">
-    <div class="p-4 border bg-light text-center">
+<div th:fragment="tap-changer">
 
-        <h5>Tap Changer</h5>
-        <button class="btn btn-primary btn-block m-1" data-target="#addTapChangerModal" data-toggle="modal"
-                th:ref="addButton">Add
-        </button>
+    <h5>Tap Changer</h5>
+    <button class="btn btn-primary btn-block m-1" data-target="#addTapChangerModal" data-toggle="modal"
+            th:ref="addButton">Add
+    </button>
 
-        <div id="tapChangerContainer">
-        </div>
-    </div>
+    <div id="tapChangerContainer"></div>
 
     <!-- Modal Add -->
     <div aria-hidden="true" aria-labelledby="addTapChangerModalLabel" class="modal fade" id="addTapChangerModal"

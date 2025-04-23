@@ -1,14 +1,11 @@
-<div class="col-md-4" th:fragment="measurement">
-    <div class="p-4 border bg-light text-center">
+<div th:fragment="measurement">
 
-        <h5>Measurement</h5>
-        <button class="btn btn-primary btn-block m-1" data-target="#addMeasurementModal" data-toggle="modal"
-                th:ref="addButton">Add
-        </button>
+    <h5>Measurement</h5>
+    <button class="btn btn-primary btn-block m-1" data-target="#addMeasurementModal" data-toggle="modal"
+            th:ref="addButton">Add
+    </button>
 
-        <div id="measurementContainer">
-        </div>
-    </div>
+    <div id="measurementContainer"></div>
 
     <!-- Modal Add -->
     <div aria-hidden="true" aria-labelledby="addMeasurementModalLabel" class="modal fade" id="addMeasurementModal"
