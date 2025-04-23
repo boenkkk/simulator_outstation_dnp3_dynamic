@@ -60,4 +60,13 @@ public class TeleSignalController {
         List<TeleSignalModel> datas = teleSignalService.getAll();
         return ResponseEntity.ok(datas);
     }
+
+    @PostMapping("/action-open-close")
+    public ResponseEntity<List<TeleSignalModel>> actionOpenClose(@RequestBody TeleSignalModel teleSignalModel) {
+        log.info("req: {}", teleSignalModel);
+        teleSignalService.actionOpenClose(teleSignalModel);
+
+        List<TeleSignalModel> datas = teleSignalService.getAll();
+        return ResponseEntity.ok(datas);
+    }
 }

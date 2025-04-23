@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.joou.UShort;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
@@ -115,5 +116,9 @@ public class TeleSignalService {
                 });
             }
         });
+    }
+
+    public void actionOpenClose(TeleSignalModel teleSignalModel) {
+        datapointService.operateBinaryOutput(teleSignalModel.getValueOpenClose(), UShort.valueOf(teleSignalModel.getIndexBoCommandOpenClose()));
     }
 }
