@@ -2,7 +2,9 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.OutstationBean;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -20,9 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 public class OutstationsService {
 
     public static final String OUTSTATION_MAP_BEAN_NAME = "outstationBean";
-
     private final ApplicationContext appContext;
     private final ConfigurableApplicationContext configContext;
+    private int previousDataPointSize = -1;
 
     public OutstationsService(ApplicationContext appContext, ConfigurableApplicationContext configContext) {
         this.appContext = appContext;
@@ -48,11 +50,24 @@ public class OutstationsService {
     }
 
     public Map<String, Object> getAllRunningInstance() {
-        Map<String, Object> retMap = new HashMap<>();
-        retMap.put("total", getInstance().getData().size());
-        retMap.put("data", getInstance().getData());
+        List<Object> listDataPoints = Optional.ofNullable(getInstance())
+            .map(instance -> instance.getData())
+            .map(data -> data.get("0.0.0.0"))
+            .map(obj -> obj.getListDataPoints())
+            .orElse(Collections.emptyList());
 
-        log.info(retMap.toString());
+        Map<String, Object> retMap = new HashMap<>();
+        retMap.put("total", Optional.ofNullable(getInstance())
+            .map(instance -> instance.getData())
+            .map(Map::size)
+            .orElse(0));
+        retMap.put("data", listDataPoints.size());
+
+        if (listDataPoints.size() != previousDataPointSize) {
+            log.info(retMap.toString());
+            previousDataPointSize = listDataPoints.size(); // update after logging
+        }
+
         return retMap;
     }
 }
