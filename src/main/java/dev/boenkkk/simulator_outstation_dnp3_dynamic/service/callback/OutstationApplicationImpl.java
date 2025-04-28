@@ -34,8 +34,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
     public UShort getProcessingDelayMs() {
         UShort retVal = ushort(0);
 
-        String message = "getProcessingDelayMs retVal:" + retVal;
-        log.info(message);
+        // String message = "getProcessingDelayMs retVal:" + retVal;
+        // log.info(message);
 
         return retVal;
     }
@@ -44,8 +44,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
     public WriteTimeResult writeAbsoluteTime(ULong time) {
         WriteTimeResult writeTimeResult = WriteTimeResult.NOT_SUPPORTED;
 
-        String message = "writeAbsoluteTime writeTimeResult:" + writeTimeResult;
-        log.info(message);
+        // String message = "writeAbsoluteTime writeTimeResult:" + writeTimeResult;
+        // log.info(message);
 
         return writeTimeResult;
     }
@@ -55,8 +55,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
         ApplicationIin applicationIin = new ApplicationIin();
         String jsonApplicationIin = jsonUtil.toJson(applicationIin);
 
-        String message = "getApplicationIin applicationIin:" + jsonApplicationIin;
-        log.info(message);
+        // String message = "getApplicationIin applicationIin:" + jsonApplicationIin;
+        // log.info(message);
 
         return new ApplicationIin();
     }
@@ -66,8 +66,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
         RestartDelay restartDelay = RestartDelay.seconds(ushort(60));
         String jsonRestartDelay = jsonUtil.toJson(restartDelay);
 
-        String message = "coldRestart restartDelay:" + jsonRestartDelay;
-        log.info(message);
+        // String message = "coldRestart restartDelay:" + jsonRestartDelay;
+        // log.info(message);
 
         return restartDelay;
     }
@@ -77,8 +77,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
         RestartDelay restartDelay = RestartDelay.seconds(ushort(60));
         String jsonRestartDelay = jsonUtil.toJson(restartDelay);
 
-        String message = "warmRestart restartDelay:" + jsonRestartDelay;
-        log.info(message);
+        // String message = "warmRestart restartDelay:" + jsonRestartDelay;
+        // log.info(message);
 
         return restartDelay;
     }
@@ -87,8 +87,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
     public FreezeResult freezeCountersAll(FreezeType freezeType, DatabaseHandle databaseHandle) {
         FreezeResult freezeResult = FreezeResult.NOT_SUPPORTED;
 
-        String message = "freezeCountersAll freezeType:" + freezeType + ", databaseHandle:" + databaseHandle + ", freezeResult:" + freezeResult;
-        log.info(message);
+        // String message = "freezeCountersAll freezeType:" + freezeType + ", databaseHandle:" + databaseHandle + ", freezeResult:" + freezeResult;
+        // log.info(message);
 
         return freezeResult;
     }
@@ -97,8 +97,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
     public FreezeResult freezeCountersRange(UShort start, UShort stop, FreezeType freezeType, DatabaseHandle databaseHandle) {
         FreezeResult freezeResult = FreezeResult.NOT_SUPPORTED;
 
-        String message = "freezeCountersRange start:" + start + ", stop:" + stop + ", freezeType:" + freezeType + ", databaseHandle:" + databaseHandle + ", freezeResult:" + freezeResult;
-        log.info(message);
+        // String message = "freezeCountersRange start:" + start + ", stop:" + stop + ", freezeType:" + freezeType + ", databaseHandle:" + databaseHandle + ", freezeResult:" + freezeResult;
+        // log.info(message);
 
         return freezeResult;
     }
@@ -108,8 +108,8 @@ public class OutstationApplicationImpl implements OutstationApplication {
         // Allow writing any string attributes that have been defined as writable
         boolean retVal = true;
 
-        String message = "writeStringAttr set:" + set + ", variation:" + variation + ", stringAttr:" + stringAttr + ", value:" + value + ", retVal:" + retVal;
-        log.info(message);
+        // String message = "writeStringAttr set:" + set + ", variation:" + variation + ", stringAttr:" + stringAttr + ", value:" + value + ", retVal:" + retVal;
+        // log.info(message);
 
         return true;
     }
