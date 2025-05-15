@@ -3,14 +3,16 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.MeasurementModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.OutstationBean;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.scheduler.SchedulerTask;
-import lombok.extern.slf4j.Slf4j;
-import org.joou.UShort;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.joou.UShort;
+import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -43,8 +45,8 @@ public class MeasurementService {
 
                     // add bean data
                     List<Object> dataPoints = Optional
-                            .ofNullable(outstationData.getListDataPoints())
-                            .orElseGet(ArrayList::new);
+                        .ofNullable(outstationData.getListDataPoints())
+                        .orElseGet(ArrayList::new);
                     String cbNewName = PREFIX_NAME + measurementModel.getName();
                     measurementModel.setName(cbNewName);
                     dataPoints.add(measurementModel);
@@ -60,14 +62,14 @@ public class MeasurementService {
 
     public MeasurementModel getData(String name) {
         MeasurementModel measurementModel = outstationsService.getOutstationData(ENDPOINT)
-                .map(OutstationBean.OutstationData::getListDataPoints)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(MeasurementModel.class::isInstance)
-                .map(MeasurementModel.class::cast)
-                .filter(model -> model.getName().equals(PREFIX_NAME + name))
-                .findFirst()
-                .orElse(null);
+            .map(OutstationBean.OutstationData::getListDataPoints)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(MeasurementModel.class::isInstance)
+            .map(MeasurementModel.class::cast)
+            .filter(model -> model.getName().equals(PREFIX_NAME + name))
+            .findFirst()
+            .orElse(null);
 
         if (measurementModel != null) {
             // set values
@@ -81,12 +83,12 @@ public class MeasurementService {
 
     public List<MeasurementModel> getAll() {
         List<MeasurementModel> measurementModels = outstationsService.getOutstationData(ENDPOINT)
-                .map(OutstationBean.OutstationData::getListDataPoints)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(MeasurementModel.class::isInstance)
-                .map(MeasurementModel.class::cast)
-                .toList();
+            .map(OutstationBean.OutstationData::getListDataPoints)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(MeasurementModel.class::isInstance)
+            .map(MeasurementModel.class::cast)
+            .toList();
 
         // set values
         measurementModels.forEach(measurementModel -> {
@@ -105,10 +107,10 @@ public class MeasurementService {
             if (dataPoints != null) {
                 // Find the matching model in the actual list
                 Optional<MeasurementModel> matchedModelOpt = dataPoints.stream()
-                        .filter(MeasurementModel.class::isInstance)
-                        .map(MeasurementModel.class::cast)
-                        .filter(model -> model.getName().equals(measurementModel.getName()))
-                        .findFirst();
+                    .filter(MeasurementModel.class::isInstance)
+                    .map(MeasurementModel.class::cast)
+                    .filter(model -> model.getName().equals(measurementModel.getName()))
+                    .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
                     // remove dnp3 data
@@ -117,7 +119,7 @@ public class MeasurementService {
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandAutoManual());
 
                     // disable scheduler
-                    schedulerTask.toggleScheduler(measurementModel.getName(), true, measurementModel.getIntervalScheduler(), measurementModel.getIndexAiValue(), measurementModel.getValueMin(), measurementModel.getValueMax());
+                    schedulerTask.toggleScheduler(matchedModel.getName(), false, matchedModel.getIntervalScheduler(), matchedModel.getIndexAiValue(), matchedModel.getValueMin(), matchedModel.getValueMax());
 
                     // remove bean data
                     dataPoints.remove(matchedModel);
