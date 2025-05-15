@@ -102,15 +102,15 @@
                                      </div>
 
                                      <div class="row justify-content-center">
-                                         <button class="btn btn-warning rounded-circle small-btn" onclick="actionInvalid(${circuitBreaker.index_bo_command_invalid}, false)">INV 0</button>
-                                         <button class="btn btn-success rounded-circle fixed-wh-5em" onclick="actionOpenClose(${circuitBreaker.index_bo_command_open_close}, false)">Close</button>
-                                         <button class="btn btn-danger rounded-circle fixed-wh-5em" onclick="actionOpenClose(${circuitBreaker.index_bo_command_open_close}, true)">Open</button>
-                                         <button class="btn btn-warning rounded-circle small-btn" onclick="actionInvalid(${circuitBreaker.index_bo_command_invalid}, true)">INV 1</button>
+                                         <button class="btn btn-warning rounded-circle small-btn" onclick="actionCBInvalid(${circuitBreaker.index_bo_command_invalid}, false)">INV 0</button>
+                                         <button class="btn btn-success rounded-circle fixed-wh-5em" onclick="actionCBOpenClose(${circuitBreaker.index_bo_command_open_close}, false)">Close</button>
+                                         <button class="btn btn-danger rounded-circle fixed-wh-5em" onclick="actionCBOpenClose(${circuitBreaker.index_bo_command_open_close}, true)">Open</button>
+                                         <button class="btn btn-warning rounded-circle small-btn" onclick="actionCBInvalid(${circuitBreaker.index_bo_command_invalid}, true)">INV 1</button>
                                      </div>
 
                                      <div class="row justify-content-center">
                                          <div class="control-knob dark">
-                                             <input id="checkbox-local-remote-${circuitBreaker.name}" type="checkbox" onclick="actionLocalRemote(${circuitBreaker.index_bo_command_local_remote}, ${circuitBreaker.value_local_remote})">
+                                             <input id="checkbox-local-remote-${circuitBreaker.name}" type="checkbox" onclick="actionCBLocalRemote(${circuitBreaker.index_bo_command_local_remote}, ${circuitBreaker.value_local_remote})">
                                              <div class="control-position on">
                                                  <span >LOCAL</span>
                                              </div>
@@ -132,7 +132,7 @@
             });
         }
 
-        function actionOpenClose(index, value) {
+        function actionCBOpenClose(index, value) {
             let circuitBreakerModel = {
                 index_bo_command_open_close: index,
                 value_open_close: value
@@ -148,7 +148,7 @@
             });
         }
 
-        function actionInvalid(index, value) {
+        function actionCBInvalid(index, value) {
             let circuitBreakerModel = {
                 index_bo_command_invalid: index,
                 value_invalid: value
@@ -164,7 +164,7 @@
             });
         }
 
-        function actionLocalRemote(index, value) {
+        function actionCBLocalRemote(index, value) {
             let switchValue = !value;
             let circuitBreakerModel = {
                 index_bo_command_local_remote: index,
