@@ -115,7 +115,7 @@
 
                                     <div class="d-flex justify-content-center mb-3">
                                         <div class="control-knob dark mx-2">
-                                            <input id="checkbox-auto-manual-${tapChanger.name}" type="checkbox" onclick="actionAutoManual(${tapChanger.index_bo_command_auto_manual}, ${tapChanger.value_auto_manual})">
+                                            <input id="checkbox-auto-manual-${tapChanger.name}" type="checkbox" onclick="actionTCAutoManual(${tapChanger.index_bo_command_auto_manual}, ${tapChanger.value_auto_manual})">
                                             <div class="control-position on">
                                                 <span>AUTO</span>
                                             </div>
@@ -128,7 +128,7 @@
                                         </div>
 
                                         <div class="control-knob dark mx-2">
-                                            <input id="checkbox-local-remote-${tapChanger.name}" type="checkbox" onclick="actionLocalRemote(${tapChanger.index_bo_command_local_remote}, ${tapChanger.value_local_remote})">
+                                            <input id="checkbox-local-remote-${tapChanger.name}" type="checkbox" onclick="actionTCLocalRemote(${tapChanger.index_bo_command_local_remote}, ${tapChanger.value_local_remote})">
                                             <div class="control-position on">
                                                 <span>LOCAL</span>
                                             </div>
@@ -142,8 +142,8 @@
                                     </div>
 
                                     <div>
-                                        <button class="adjust-button btn btn-success" id="increase-${tapChanger.name}" onclick="actionRaiseLower(${tapChanger.index_bo_command_raise_lower}, true)">Raise</button>
-                                        <button class="adjust-button btn btn-danger" id="decrease-${tapChanger.name}" onclick="actionRaiseLower(${tapChanger.index_bo_command_raise_lower}, false)">Lower</button>
+                                        <button class="adjust-button btn btn-success" id="increase-${tapChanger.name}" onclick="actionTCRaiseLower(${tapChanger.index_bo_command_raise_lower}, true)">Raise</button>
+                                        <button class="adjust-button btn btn-danger" id="decrease-${tapChanger.name}" onclick="actionTCRaiseLower(${tapChanger.index_bo_command_raise_lower}, false)">Lower</button>
                                     </div>
                                 </div>
                              `;
@@ -155,7 +155,7 @@
             });
         }
 
-        function actionRaiseLower(index, value) {
+        function actionTCRaiseLower(index, value) {
             let tapChangerModel = {
                 index_bo_command_raise_lower: index,
                 value_raise_lower: value
@@ -171,7 +171,7 @@
             });
         }
 
-        function actionAutoManual(index, value) {
+        function actionTCAutoManual(index, value) {
             let switchValue = !value;
             let tapChangerModel = {
                 index_bo_command_auto_manual: index,
@@ -188,7 +188,7 @@
             });
         }
 
-        function actionLocalRemote(index, value) {
+        function actionTCLocalRemote(index, value) {
             let switchValue = !value;
             let tapChangerModel = {
                 index_bo_command_local_remote: index,
