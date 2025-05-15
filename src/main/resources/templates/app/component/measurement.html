@@ -110,7 +110,7 @@
 
                                     <div class="d-flex justify-content-center mb-3">
                                         <div class="control-knob dark mx-2">
-                                            <input id="checkbox-auto-manual-${measurement.name}" type="checkbox" onclick="actionAutoManual(${measurement.index_bo_command_auto_manual}, ${measurement.value_auto_manual})">
+                                            <input id="checkbox-auto-manual-${measurement.name}" type="checkbox" onclick="actionMeasAutoManual(${measurement.index_bo_command_auto_manual}, ${measurement.value_auto_manual})">
                                             <div class="control-position on">
                                                 <span>AUTO</span>
                                             </div>
@@ -124,8 +124,8 @@
                                     </div>
 
                                     <div>
-                                        <button class="adjust-button btn btn-success" id="increase-${measurement.name}" onclick="actionRaiseLower(${measurement.index_bo_command_raise_lower}, true)">Raise</button>
-                                        <button class="adjust-button btn btn-danger" id="decrease-${measurement.name}" onclick="actionRaiseLower(${measurement.index_bo_command_raise_lower}, false)">Lower</button>
+                                        <button class="adjust-button btn btn-success" id="increase-${measurement.name}" onclick="actionMeasRaiseLower(${measurement.index_bo_command_raise_lower}, true)">Raise</button>
+                                        <button class="adjust-button btn btn-danger" id="decrease-${measurement.name}" onclick="actionMeasRaiseLower(${measurement.index_bo_command_raise_lower}, false)">Lower</button>
                                     </div>
                                 </div>
                              `;
@@ -137,7 +137,7 @@
             });
         }
 
-        function actionRaiseLower(index, value) {
+        function actionMeasRaiseLower(index, value) {
             let measurementModel = {
                 index_bo_command_raise_lower: index,
                 value_raise_lower: value
@@ -153,7 +153,7 @@
             });
         }
 
-        function actionAutoManual(index, value) {
+        function actionMeasAutoManual(index, value) {
             let switchValue = !value;
             let measurementModel = {
                 index_bo_command_auto_manual: index,
