@@ -3,14 +3,16 @@ package dev.boenkkk.simulator_outstation_dnp3_dynamic.service;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.OutstationBean;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.model.TapChangerModel;
 import dev.boenkkk.simulator_outstation_dnp3_dynamic.scheduler.SchedulerTask;
-import lombok.extern.slf4j.Slf4j;
-import org.joou.UShort;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import org.joou.UShort;
+import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
@@ -44,8 +46,8 @@ public class TapChangerService {
 
                     // add bean data
                     List<Object> dataPoints = Optional
-                            .ofNullable(outstationData.getListDataPoints())
-                            .orElseGet(ArrayList::new);
+                        .ofNullable(outstationData.getListDataPoints())
+                        .orElseGet(ArrayList::new);
                     String cbNewName = PREFIX_NAME + tapChangeModel.getName();
                     tapChangeModel.setName(cbNewName);
                     dataPoints.add(tapChangeModel);
@@ -61,14 +63,14 @@ public class TapChangerService {
 
     public TapChangerModel getData(String name) {
         TapChangerModel tapChangerModel = outstationsService.getOutstationData(ENDPOINT)
-                .map(OutstationBean.OutstationData::getListDataPoints)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(TapChangerModel.class::isInstance)
-                .map(TapChangerModel.class::cast)
-                .filter(model -> model.getName().equals(PREFIX_NAME + name))
-                .findFirst()
-                .orElse(null);
+            .map(OutstationBean.OutstationData::getListDataPoints)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(TapChangerModel.class::isInstance)
+            .map(TapChangerModel.class::cast)
+            .filter(model -> model.getName().equals(PREFIX_NAME + name))
+            .findFirst()
+            .orElse(null);
 
         if (tapChangerModel != null) {
             // set values
@@ -83,12 +85,12 @@ public class TapChangerService {
 
     public List<TapChangerModel> getAll() {
         List<TapChangerModel> tapChangerModels = outstationsService.getOutstationData(ENDPOINT)
-                .map(OutstationBean.OutstationData::getListDataPoints)
-                .orElse(Collections.emptyList())
-                .stream()
-                .filter(TapChangerModel.class::isInstance)
-                .map(TapChangerModel.class::cast)
-                .toList();
+            .map(OutstationBean.OutstationData::getListDataPoints)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(TapChangerModel.class::isInstance)
+            .map(TapChangerModel.class::cast)
+            .toList();
 
         // set values
         tapChangerModels.forEach(tapChangerModel -> {
@@ -108,10 +110,10 @@ public class TapChangerService {
             if (dataPoints != null) {
                 // Find the matching model in the actual list
                 Optional<TapChangerModel> matchedModelOpt = dataPoints.stream()
-                        .filter(TapChangerModel.class::isInstance)
-                        .map(TapChangerModel.class::cast)
-                        .filter(model -> model.getName().equals(tapChangerModel.getName()))
-                        .findFirst();
+                    .filter(TapChangerModel.class::isInstance)
+                    .map(TapChangerModel.class::cast)
+                    .filter(model -> model.getName().equals(tapChangerModel.getName()))
+                    .findFirst();
 
                 matchedModelOpt.ifPresent(matchedModel -> {
                     // remove dnp3 data
@@ -121,7 +123,7 @@ public class TapChangerService {
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandLocalRemote());
 
                     // disable scheduler
-                    schedulerTask.toggleScheduler(tapChangerModel.getName(), false, tapChangerModel.getIntervalScheduler(), tapChangerModel.getIndexAiValue(), tapChangerModel.getValueMin(), tapChangerModel.getValueMax());
+                    schedulerTask.toggleScheduler(matchedModel.getName(), false, matchedModel.getIntervalScheduler(), matchedModel.getIndexAiValue(), matchedModel.getValueMin(), matchedModel.getValueMax());
 
                     // remove bean data
                     dataPoints.remove(matchedModel);
