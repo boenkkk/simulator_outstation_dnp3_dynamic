@@ -244,7 +244,9 @@
             // local remote condition
             let tcLocalRemoteValue = tapChanger.value_local_remote == 1;
             // NOTE: DONT change to ===
-            $("#checkbox-local-remote-" + tapChanger.name).attr("checked", tcLocalRemoteValue);
+            $("#checkbox-local-remote-" + tapChanger.name)
+                .attr("checked", tcLocalRemoteValue)
+                .attr("onclick", `actionCBLocalRemote(${tapChanger.index_bo_command_local_remote}, ${tapChanger.value_local_remote})`);
         }
 
         $(document).ready(function () {
