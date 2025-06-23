@@ -111,6 +111,7 @@ public class DatapointService {
                                         case "indexBoCommandRaiseLower" -> {
                                             log.info("Action: RAISE/LOWER command for TC_");
                                             databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            databaseService.updateValueBinaryInput(ENDPOINT, tapChangerModel.getIndexBiRaiseLower(), valueOpType);
                                             Double analogInput = databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue());
                                             double updateValue;
                                             if (valueOpType) {
@@ -128,6 +129,7 @@ public class DatapointService {
                                         case "indexBoCommandAutoManual" -> {
                                             log.info("Action: AUTO/MANUAL command for TC_");
                                             databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            databaseService.updateValueBinaryInput(ENDPOINT, tapChangerModel.getIndexBiAutoManual(), valueOpType);
 
                                             Boolean valueAutoManual = databaseService.getBinaryOutput(ENDPOINT, index.intValue());
                                             // scheduler action
@@ -139,6 +141,7 @@ public class DatapointService {
                                         case "indexBoCommandLocalRemote" -> {
                                             log.info("Action: LOCAL/REMOTE command for TC_");
                                             databaseService.updateValueBinaryOutput(ENDPOINT, index.intValue(), valueOpType);
+                                            databaseService.updateValueBinaryInput(ENDPOINT, tapChangerModel.getIndexBiLocalRemote(), valueOpType);
 
                                             commandStatus.set(CommandStatus.SUCCESS);
                                         }
