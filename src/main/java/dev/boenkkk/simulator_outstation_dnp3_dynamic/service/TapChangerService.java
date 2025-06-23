@@ -41,8 +41,11 @@ public class TapChangerService {
                     // add dnp3 data
                     databaseService.addAnalogInput(ENDPOINT, tapChangeModel.getIndexAiValue());
                     databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandRaiseLower());
+                    databaseService.addBinaryInput(ENDPOINT, tapChangeModel.getIndexBiRaiseLower());
                     databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandAutoManual());
+                    databaseService.addBinaryInput(ENDPOINT, tapChangeModel.getIndexBiAutoManual());
                     databaseService.addBinaryOutput(ENDPOINT, tapChangeModel.getIndexBoCommandLocalRemote());
+                    databaseService.addBinaryInput(ENDPOINT, tapChangeModel.getIndexBiLocalRemote());
 
                     // add bean data
                     List<Object> dataPoints = Optional
@@ -75,9 +78,12 @@ public class TapChangerService {
         if (tapChangerModel != null) {
             // set values
             tapChangerModel.setValue(databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue()).intValue());
-            tapChangerModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandRaiseLower()));
-            tapChangerModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
-            tapChangerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+            tapChangerModel.setValueCommandRaiseLower(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandRaiseLower()));
+            tapChangerModel.setValueRaiseLower(databaseService.getBinaryInput(ENDPOINT, tapChangerModel.getIndexBiRaiseLower()));
+            tapChangerModel.setValueCommandAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
+            tapChangerModel.setValueAutoManual(databaseService.getBinaryInput(ENDPOINT, tapChangerModel.getIndexBiAutoManual()));
+            tapChangerModel.setValueCommandLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+            tapChangerModel.setValueLocalRemote(databaseService.getBinaryInput(ENDPOINT, tapChangerModel.getIndexBiLocalRemote()));
         }
 
         return tapChangerModel;
@@ -95,9 +101,12 @@ public class TapChangerService {
         // set values
         tapChangerModels.forEach(tapChangerModel -> {
             tapChangerModel.setValue(databaseService.getAnalogInput(ENDPOINT, tapChangerModel.getIndexAiValue()).intValue());
-            tapChangerModel.setValueRaiseLower(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandRaiseLower()));
-            tapChangerModel.setValueAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
-            tapChangerModel.setValueLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+            tapChangerModel.setValueCommandRaiseLower(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandRaiseLower()));
+            tapChangerModel.setValueRaiseLower(databaseService.getBinaryInput(ENDPOINT, tapChangerModel.getIndexBiRaiseLower()));
+            tapChangerModel.setValueCommandAutoManual(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandAutoManual()));
+            tapChangerModel.setValueAutoManual(databaseService.getBinaryInput(ENDPOINT, tapChangerModel.getIndexBiAutoManual()));
+            tapChangerModel.setValueCommandLocalRemote(databaseService.getBinaryOutput(ENDPOINT, tapChangerModel.getIndexBoCommandLocalRemote()));
+            tapChangerModel.setValueLocalRemote(databaseService.getBinaryInput(ENDPOINT, tapChangerModel.getIndexBiLocalRemote()));
         });
 
         return tapChangerModels;
@@ -119,8 +128,11 @@ public class TapChangerService {
                     // remove dnp3 data
                     databaseService.deleteAnalogInput(ENDPOINT, matchedModel.getIndexAiValue());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandRaiseLower());
+                    databaseService.deleteBinaryInput(ENDPOINT, matchedModel.getIndexBiRaiseLower());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandAutoManual());
+                    databaseService.deleteBinaryInput(ENDPOINT, matchedModel.getIndexBiAutoManual());
                     databaseService.deleteBinaryOutput(ENDPOINT, matchedModel.getIndexBoCommandLocalRemote());
+                    databaseService.deleteBinaryInput(ENDPOINT, matchedModel.getIndexBiLocalRemote());
 
                     // disable scheduler
                     schedulerTask.toggleScheduler(matchedModel.getName(), false, matchedModel.getIntervalScheduler(), matchedModel.getIndexAiValue(), matchedModel.getValueMin(), matchedModel.getValueMax());

@@ -4,8 +4,8 @@
         {"name": "B", "index_dbbi_value": 1, "index_bo_command_open_close": 3, "index_bo_command_invalid": 4, "index_bo_command_local_remote": 5}
     ],
     "tap_changer_datas": [
-        {"name": "A", "index_ai_value": 11, "index_bo_command_raise_lower": 11, "index_bo_command_auto_manual": 12, "index_bo_command_local_remote": 13, "interval_scheduler": 1, "value_min": 0, "value_max": 16},
-        {"name": "B", "index_ai_value": 12, "index_bo_command_raise_lower": 14, "index_bo_command_auto_manual": 15, "index_bo_command_local_remote": 16, "interval_scheduler": 1, "value_min": 17, "value_max": 32}
+        {"name": "A", "index_ai_value": 11, "index_bo_command_raise_lower": 11, "index_bi_raise_lower": 11, "index_bo_command_auto_manual": 12, "index_bi_auto_manual": 12, "index_bo_command_local_remote": 13, "index_bi_local_remote": 13, "interval_scheduler": 1, "value_min": 0, "value_max": 16},
+        {"name": "B", "index_ai_value": 12, "index_bo_command_raise_lower": 14, "index_bi_raise_lower": 14, "index_bo_command_auto_manual": 15, "index_bi_auto_manual": 15, "index_bo_command_local_remote": 16, "index_bi_local_remote": 16, "interval_scheduler": 1, "value_min": 17, "value_max": 32}
     ],
     "tele_signal_datas": [
         {"name": "A", "index_bi_value": 70, "index_bo_command_open_close": 70},

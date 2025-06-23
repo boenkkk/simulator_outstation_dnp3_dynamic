@@ -33,12 +33,24 @@
                             <input class="form-control" id="tcIndexBoCommandRaiseLower" required type="number">
                         </div>
                         <div class="form-group">
+                            <label for="tcIndexBoCommandRaiseLower">Index Bi Raise Lower</label>
+                            <input class="form-control" id="tcIndexBiRaiseLower" required type="number">
+                        </div>
+                        <div class="form-group">
                             <label for="tcIndexBoCommandAutoManual">Index Bo Command Auto Manual</label>
                             <input class="form-control" id="tcIndexBoCommandAutoManual" required type="number">
                         </div>
                         <div class="form-group">
+                            <label for="tcIndexBoCommandAutoManual">Index Bi Auto Manual</label>
+                            <input class="form-control" id="tcIndexBiAutoManual" required type="number">
+                        </div>
+                        <div class="form-group">
                             <label for="tcIndexBoCommandLocalRemote">Index Bo Command Local Remote</label>
                             <input class="form-control" id="tcIndexBoCommandLocalRemote" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="tcIndexBoCommandLocalRemote">Index Bi Local Remote</label>
+                            <input class="form-control" id="tcIndexBiLocalRemote" required type="number">
                         </div>
                         <div class="form-group">
                             <label for="tcIntervalScheduler">Interval Scheduler</label>
@@ -70,8 +82,11 @@
                 name: $("#tcName").val(),
                 index_ai_value: parseInt($("#tcIndexAiValue").val()),
                 index_bo_command_raise_lower: parseInt($("#tcIndexBoCommandRaiseLower").val()),
+                index_bi_raise_lower: parseInt($("#tcIndexBiRaiseLower").val()),
                 index_bo_command_auto_manual: parseInt($("#tcIndexBoCommandAutoManual").val()),
+                index_bi_auto_manual: parseInt($("#tcIndexBiAutoManual").val()),
                 index_bo_command_local_remote: parseInt($("#tcIndexBoCommandLocalRemote").val()),
+                index_bi_local_remote: parseInt($("#tcIndexBiLocalRemote").val()),
                 interval_scheduler: parseInt($("#tcIntervalScheduler").val()),
                 value_min: parseInt($("#tcValueMin").val()),
                 value_max: parseInt($("#tcValueMax").val())
