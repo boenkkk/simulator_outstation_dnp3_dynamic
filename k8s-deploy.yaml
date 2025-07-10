@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
     name: simulator-outstation-dnp3-dynamic
-    namespace: fep-dnp3
+    namespace: simulator-dnp3
 spec:
     replicas: 1
     selector:
@@ -30,7 +30,7 @@ apiVersion: v1
 kind: Service
 metadata:
     name: simulator-outstation-dnp3-dynamic-service
-    namespace: fep-dnp3
+    namespace: simulator-dnp3
 spec:
     selector:
         app: simulator-outstation-dnp3-dynamic

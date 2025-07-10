@@ -7,7 +7,7 @@ set -e
 APP_NAME="simulator-outstation-dnp3-dynamic"
 DOCKERFILE="DOCKERFILE"
 REGISTRY_PATH="1.2.3.4/scada"
-NAMESPACE="fep-dnp3"
+NAMESPACE="simulator-dnp3"
 DEPLOY_FILE="k8s-deploy.yaml"
 FULL_IMAGE_NAME="$REGISTRY_PATH/$APP_NAME"
 
