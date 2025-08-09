@@ -10,6 +10,8 @@ purposes.
 The application provides a web interface for monitoring and controlling the simulated outstation's data points, such as
 measurements, tele-signals, and circuit breakers.
 
+![Outstation Simulator](img/outstation-0.png "Outstation Simulator")
+
 ## DNP3 Concepts
 
 For users who may be new to DNP3, here are some basic concepts relevant to this simulator:
@@ -245,6 +247,25 @@ The application uses the following data models:
 | `index_bo_command_open_close` | Integer | The index of the binary output command for open/close. |
 | `value`                       | Boolean | The current value of the tele-signal.                  |
 | `value_open_close`            | Boolean | The open/close state of the tele-signal.               |
+
+## Connecting with a DNP3 Master Simulator
+
+To connect this outstation simulator with a DNP3 master simulator (e.g., [DNP3 Master Simulator by FreyrSCADA](https://www.freyrscada.com/dnp3-ieee-1815-Client-Simulator.php)), you need to configure the master to communicate with the outstation's IP address and port.
+
+1.  **Get the Outstation's IP Address**:
+    The outstation binds to `0.0.0.0` by default, meaning it listens on all available network interfaces. You will need to use the IP address of the machine running the simulator. You can find this using `ipconfig` on Windows or `ifconfig`/`ip addr` on Linux/macOS.
+
+2.  **Configure the Master Simulator**:
+    -   **IP Address**: The IP address of the machine running this DNP3 Outstation Simulator.
+    -   **Port**: The port configured in `application.properties` (`app.dnp3.outstation-port`), which defaults to `20000`.
+    -   **Master Address**: The DNP3 address of your master simulator. This should match the `app.dnp3.master-address` in the `application.properties` file (default is `2`).
+    -   **Outstation Address**: The DNP3 address of this outstation simulator. This should match the `app.dnp3.outstation-address` in the `application.properties` file (default is `1`).
+
+![Freyr DNP3 Master Simulator](img/master-0.png "")
+
+Once the master is configured and connected, it can poll the outstation for data and send control commands. You should see the interactions reflected in both the master simulator's logs and this application's web interface.
+
+![Freyr DNP3 Master Simulator](img/master-1.png "")
 
 ## Conventional Commit
 
